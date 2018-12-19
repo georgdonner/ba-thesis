@@ -1,0 +1,51 @@
+\input{praeambel.tex} % Importiere die Einstellungen aus der Präambel
+% hier beginnt der eigentliche Inhalt
+\begin{document}
+\pagenumbering{Roman} % Seitenummerierung mit großen römischen Zahlen 
+\pagestyle{empty} % keine Kopf- oder Fußzeilen auf den ersten Seiten
+
+% Titelseite
+\clearscrheadings\clearscrplain
+\begin{center}
+\begin{Huge}
+Themenspezifische Gruppierung deutscher Online-Zeitungen mit Natural Language Processing\\
+\end{Huge}
+
+\vspace{8mm}
+Bachelorarbeit\\
+\vspace{0.4cm}
+\vspace{2 cm}
+Georg Donner \\
+Matrikel-Nummer 553821\\
+\vspace{8cm}
+\begin{tabular}{rl}
+{\bfseries Betreuer} & Prof. Dr. Gefei Zhang\\
+{\bfseries Erstprüfer} & Prof. Dr. Gefei Zhang\\
+{\bfseries Zweitprüfer} & Prof. Dr. Barne Kleinen\\
+\end{tabular}
+
+\end{center}
+\clearpage
+
+\pagestyle{useheadings} % normale Kopf- und Fußzeilen für den Rest
+
+\tableofcontents % erstelle hier das Inhaltsverzeichnis
+\listoffigures % erstelle hier das Abbildungsverzeichnis
+
+% richtiger Inhalt
+\pagenumbering{arabic} % ab jetzt die normale arabische Nummerierung
+\chapter{Einleitung}
+
+Hier steht meine Einleitung
+
+\bibliographystyle{alphadin_martin}
+\bibliography{bibliographie}
+
+\chapter*{Erklärung}
+
+Hiermit versichere ich, dass ich die vorliegende Arbeit selbstständig verfasst und keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe, dass alle Stellen der Arbeit, die wörtlich oder sinngemäß aus anderen Quellen übernommen wurden, als solche kenntlich gemacht und dass die Arbeit in gleicher oder ähnlicher Form noch keiner Prüfungsbehörde vorgelegt wurde.
+
+\vspace{3cm}
+Ort, Datum \hspace{5cm} Unterschrift\\
+
+\end{document}
