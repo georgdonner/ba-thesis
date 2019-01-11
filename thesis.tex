@@ -72,13 +72,36 @@ Fluch der Dimensionalität: Je mehr Dimensionen es gibt, umso weniger sagt der R
 Was ist Klassifizierung? Zuordnung einer neuen Beobachtung zu einer Kategorie aus einem vordefinierten Set. Wurde vorher auf Basis eines Trainingssets trainiert, bei denen die Kategorie bekannt ist (supervised learning) (aus Wikipedia en). Wie funktioniert Klassifizierung grob (One vs All, Multinomial...). Welche Klassifizierungsalgorithmen gibt es? Auf jeden Fall keinen besten.
 
 \chapter{Textverarbeitung}
+Welche Schritte sind erforderlich, was muss besonders berücksichtigt werden?
+\section{Verwendete Tools}
+\subsection{Python}
+Python ist die am häufigsten für Machine Learning verwendete Sprache und es gibt eine Vielzahl an packages die für nlp/ml optimiert sind. Welche packages wurden für diese Arbeit primär genutzt und warum so gut? Zwei sehr wichtige im Detail, sonst noch Numpy, Pandas und Matplotlib? Anaconda?
+\subsection{SpaCy}
+Was kann Spacy alles? Warum für Spacy entschieden? (ist für die deutsche Sprache schon sehr ausgereift). Vergleich zu anderen NLP tools und Überblick über die tatsächliche Schnelligkeit auf meiner Maschine beim processen?
+\subsection{Scikit-learn}
+Was kann sklearn alles? Warum für sklearn entschieden? Wie funktioniert es genau? Vergleiche zu anderen ML tools?
 \section{Datenselektion}
+Die Auswahl der Daten ist Grundlage für alles, blabla
+\subsection{Datensatz}
+Woher kommt der Datensatz? Wie groß? Welche Zeitungen? Überblick der Zeitspanne. Illustration wie verschieden die Artikel sind?
+\subsection{Normalisierung}
+Welche Normalisierungen mussten vor der Aufbereitung durchgeführt werden: Herausfiltern von viel zu kurzen Artikeln/Artikeln ohne Inhalt, Zuordnung von Kategorien zu jedem Artikel, Vereinheitlichung des Formats des Datums (ISO). Oft veröffentlichen Zeitungen auch Artikel einer Newsagentur wie z.B. der dpa, diese müssen herausgefiltert werden, um den Schreibstil einer Zeitung ermitteln zu können (nur Artikel von Autoren der Zeitung sollen berücksichtigt werden). Illustration zum Anteil der dpa Artikel.
 \section{Textaufbereitung}
+Analyse der Texten mit einem Natural Language Processing Tool, das die zuvor beschriebene Pipeline durchläuft (SpaCy). Vorherige Ansätze?
+Nachbereitung der Texte: Entfernen von vermeintlichen Sätzen mit weniger als 4 Wörtern. Musste dort sehr rigoros sein, da jeglicher Inhalt mit enthalten war, so auch Kürzel wie (dpa), der Ort, Autor, Quellen oder Verweise.
 \section{Featuregenerierung}
+Es gibt eine Vielzahl an Features, die man für einen Text generieren bzw. auswählen kann, ohne dass dabei der Inhalt des Artikels einen Einfluss hat. Verweis zu Studien, die analysiert haben, welche Kombination an Features die besten Resultate liefern.
 \subsection{Token-basiert}
+Durchschnittliche Satzlänge, durchschnittliche Wortlänge?
+Frequenz der n häufigsten Wörter (bei mir 30, 50, 100). Sind dann Wörter wie ['der', 'ich', 'dieser']
 \subsection{Lexikalisch}
+Type-token ratio: Beurteilt die Reichhaltigkeit des Vokabulars, dafür gibt es noch mehr präzisere Indizes (in der Studie von 2000 sind einige Beispiele). Nachteil: funktioniert besser, je länger die Texte sind und die Artikel sind durchschnittlich nicht besonders lang. Illustration dazu?
+Readability: Wieder gibt es hier viele verschiedene Indizes. In dieser Arbeit verwendet wurde der Flesch-Reading Ease Index unter Berücksichtigung dass die Sprache Deutsch ist (gibt noch viel mehr für Englisch). Erforderte die Berechnung, wieviele Silben ein Wort hat (war in der Pipeline nicht mit drin)
 \subsection{Morphologisch}
+POS unigrams: Die Frequenz der einzelnen Wortarten für jeden Artikel, ist teilweise nur sehr gering und auch hier erhöht sich die Aussagekraft mit der Länge des Artikels.
+Lexical Density: Wieviele Wörter des Artikels tragen zum Inhalt bei (Nomen, Verben, Adjektive, Adverbien) im Verhältnis zur Gesamtanzahl an Wörtern? Ähnlich zur Stopword Frequency, die auch berechnet wurde, aber zu sehr mit der lexikalischen Dichte korreliert.
 \subsection{Syntaktisch}
+Dependency relation unigrams: Die Frequenz der einzelnen Dependency relations für jeden Artikel, ist teilweise nur sehr gering und auch hier erhöht sich die Aussagekraft mit der Länge des Artikels.
 
 \chapter{Datenauswertung}
 \section{Auswertungsfunktionen}
