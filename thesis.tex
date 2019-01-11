@@ -36,9 +36,59 @@ Matrikel-Nummer 553821\\
 \chapter{Einleitung}
 Natural Language Processing ist ein großes Feld, welches besonders in der letzten Zeit im Zuge der Digitalisierung viel an Aufmerksamkeit und Wichtigkeit gewonnen hat. Es ermöglicht uns Informationen schneller zu finden, Systeme durch gesprochene Sprache zu steuern oder ganze Texte zu generieren. Eine weitere Aufgabe ist es, eine große Menge an Texten in Kategorien einzuteilen, um die Daten auf eine gewünschte Teilmenge für eine spezifischere Suche oder Analyse zu reduzieren. Die Kategorisierung der Dokumente nach ihrem Inhalt ist hier der häufigste Anwendungsfall, es ist aber auch möglich Texte nach ihrem generellen Genre oder Schreibstil zu vergleichen.
 
-Diese Arbeit wird am Beispiel deutscher Online-Zeitungen untersuchen, welche Möglichkeiten es gibt Texte unabhängig von ihrem Inhalt zu vergleichen. Dabei werden lexikalische und syntaktische Merkmale, aber auch die Verwendung inhaltlich irrelevanter Wörter als Features verwendet. Es wird überprüft, inwiefern die Artikel gruppiert werden können und Rückschlüsse auf Unterschiede im Schreibstil ganzer Zeitungen statt nur einzelner Artikel zulassen.
+Diese Arbeit wird am Beispiel deutscher Online-Zeitungen untersuchen, welche Möglichkeiten es gibt Texte unabhängig von ihrem Inhalt zu vergleichen. Dabei werden lexikalische, morphologische und syntaktische Merkmale, aber auch die Verwendung inhaltlich irrelevanter Wörter als Features verwendet. Es wird überprüft, inwiefern die Artikel gruppiert werden können und Rückschlüsse auf Unterschiede im Schreibstil ganzer Zeitungen statt nur einzelner Artikel zulassen.
 
 Des Weiteren wird untersucht, ob und wie sich der Schreibstil einer Zeitung je nach Thema, wie z.B. Politik und Sport, unterscheidet.
+
+\chapter{Grundlagen}
+Wofür werden die folgenden Grundlagen beschrieben, warum relevant zum Thema?
+
+\section{Natural Language Processing}
+Teilgebiet der Informatik -> Künstliche Intelligenz und Maschinelles Lernen
+
+Verarbeitung natürlicher Sprache
+-> natürliche Sprache: Menschliche Sprachen, die sich über lange Zeit entwickelt haben
+
+Große Herausforderung, da menschliche Sprachen sehr variabel sind, da sie sich in einem endlosen Entwicklungsprozess befinden. Die Analyse der Semantik eines Satzes oder Textes ist für Computer besonders schwierig, da sich die Bedeutung häufig erst durch den Kontext ergibt.
+
+Mit den schnellen Fortschritten im Bereich des Maschinellen Lernens in den letzten Jahrzehnten, eröffneten sich für die Verarbeitung natürlicher Sprache völlig neue Möglichkeiten. Die Erkennung von Syntax und Semantik wurde damit immer präziser und das Teilgebiet immer relevanter. Jedoch basiert dies immer noch hauptsächlich auf Algorithmen des Supervised Learning für die die Texte vorher manuell annotiert werden müssen. Ein bekanntes Beispiel für einen Korpus deutscher Sprache mit solchen Annotationen ist der TIGER Corpus \footnote{http://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/tiger.html}.
+
+\todo{Unterschied zwischen Englisch und Deutsch, welche Herausforderungen/Einschränkungen gibt es?}
+\subsection{Pipeline}
+Bei der Analyse eines Textes werden in der Regel verschiedene Schritte abgearbeitet, die jeweils eigene Merkmale der Sprache untersuchen. Es entsteht eine so genannte Pipeline, die je nach Anwendungsfall unterschiedlich aussieht. Das sequenzielle Ausführen dieser einzelnen Vorgänge ist notwendig, da beispielsweise die Analyse der Syntax voraussetzt, dass das Dokument bereits in Token zerlegt wurde. Im Folgenden werden die für diese Arbeit relevanten Schritte beschrieben.
+
+\todo{eventuell noch andere Modelle beschreiben?}
+\paragraph*{Tokenisierung}
+\paragraph*{POS-Tagging}
+\paragraph*{Dependency Parsing}
+\paragraph*{Lemmatisierung}
+\section{Machine Learning}
+Was ist Machine Learning? Erklärung der Basics, die für diese Arbeit relevant sind.
+\subsection{Feature Engineering}
+Was bedeutet Feature Engineering? Sehr wichtiger Schritt; ausschlaggebend für das letztendliche Resultat. In Natural Language Processing sehr viele verschiedene Ansätze: teilweise Studien die sich nur damit befassen, welche Features es gibt/am besten geeignet sind um xy zu erkennen/erreichen. Anreißen welche Ansätze es gibt und welche in dieser Arbeit nicht berücksichtigt werden. Dieser Prozess wird Feature Selection genannt und ist sehr wichtig aus verschiedenen Gründen: Dimensionalität, Noise Reduction, kürzere Trainingszeiten (aus Wikipedia en).
+\subsection{Dimensionsionalitätsreduktion}
+Fluch der Dimensionalität: Je mehr Dimensionen es gibt, umso weniger sagt der Raum aus, da die Daten immer weiter voneinander entfernt liegen. Hängt davon ab wieviele Beobachtungen es gibt. Ist fürs Clustering ziemlich wichtig, weil dort die Distanzen wichtig sind. (es gibt auch andere Ansätze wie t-SNE, wo nur Cluster eine Aussagekraft haben und keine Entfernungen). Sehr häufig eingesetztes Verfahren: Hauptkomponentenanalyse (PCA). Features haben dann für sich betrachtet keine Aussagekraft mehr, aber ähnlicher Anteil an Informationen/Varianz bleibt erhalten, obwohl weniger Features. Gut dafür geeignet, Cluster in einem Datensatz zu erkennen. Bei Reduktion auf 2 oder 3 Features kann es dann auch sinnvoll geplottet werden. Dabei gehen aber oft viel zu viele Informationen verloren.
+\subsection{Klassifizierung}
+Was ist Klassifizierung? Zuordnung einer neuen Beobachtung zu einer Kategorie aus einem vordefinierten Set. Wurde vorher auf Basis eines Trainingssets trainiert, bei denen die Kategorie bekannt ist (supervised learning) (aus Wikipedia en). Wie funktioniert Klassifizierung grob (One vs All, Multinomial...). Welche Klassifizierungsalgorithmen gibt es? Auf jeden Fall keinen besten.
+
+\chapter{Textverarbeitung}
+\section{Datenselektion}
+\section{Textaufbereitung}
+\section{Featuregenerierung}
+\subsection{Token-basiert}
+\subsection{Lexikalisch}
+\subsection{Morphologisch}
+\subsection{Syntaktisch}
+
+\chapter{Datenauswertung}
+\section{Auswertungsfunktionen}
+\section{Versuche}
+\subsection{Feature Selection}
+\subsection{Feature Extraction}
+\subsection{Clustering}
+\section{Ergebnisse}
+
+\chapter{Ergebnis}
 
 \bibliographystyle{alphadin_martin}
 \bibliography{bibliographie}
