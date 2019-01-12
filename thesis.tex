@@ -104,12 +104,37 @@ Lexical Density: Wieviele Wörter des Artikels tragen zum Inhalt bei (Nomen, Ver
 Dependency relation unigrams: Die Frequenz der einzelnen Dependency relations für jeden Artikel, ist teilweise nur sehr gering und auch hier erhöht sich die Aussagekraft mit der Länge des Artikels.
 
 \chapter{Datenauswertung}
-\section{Auswertungsfunktionen}
-\section{Versuche}
+Wie können die Daten überhaupt ausgewertet werden? Es müssen gleichzeitig die Performance der Features, als auch des Algorithmus zur Klassifizierung analysiert und ausgewertet werden.
+\section{Klassifizierung}
+Warum versuche ich die Klassifizierung? Weil wenn Klassifizierung nicht wirklich funktioniert und kein Model trainiert werden kann, welches die Zeitung auf Basis der Daten predicten kann, dann ist auch keine Gruppierung möglich.
+Ist zudem eine sehr gute Methode dafür festzustellen, an welchen Features man die Zeitungen am besten voneinander unterscheiden kann und welche eventuell völlig unnötig sind und so bei der Gruppierung nur stören würden.
+\subsection{Vorbereitung des Datensatzes}
+Für das Training muss der Datensatz in Train/Testset aufgeteilt werden. Welche Aufteilung habe ich hier gewählt und warum?
+Die Daten müssen vorher normalisiert/standardisiert werden. Kommt allerdings auch auf die ausgewählten Features und den gewählten Algorithmus an.
 \subsection{Feature Selection}
+Welche Verfahren wurden zur Feature Selection verwendet? Warum? Warum war das überhaupt nötig. Vergleich zu bzw. Verweis auf bisherige(n) Studien zur Feature Selection zur Genre/Author detection.
+(evtl. welche Features sind pro Zeitung relevant gewesen? weil unterschiedliche thetas pro Kategorie bei One vs Rest Klassifizierung)
+\subsection{Messung der Performance}
+Welche verschiedenen Ansätze gibt es hier?
+\paragraph*{F-Maß}
+\paragraph*{Wahrheitsmatrix}
+\paragraph*{Beurteilung der Wahrscheinlichkeiten}
+Wahrheitsmatrix kann auch mit den probabilities gemacht werden. Sagt noch mehr über die Sicherheit der Vorhersagen aus.
+\subsection{Verwendete Verfahren}
+Warum müssen verschiedene Verfahren getestet werden?
+\paragraph*{Linear Discriminant Analysis}
+\paragraph*{Logistische Regression}
+\paragraph*{Random Forest}
+\paragraph*{Support Vector Machines}
+\section{Clustering}
+Zuerst wurde untersucht, ob beim Clustering der einzelnen Artikeln jeder Zeitung Cluster entstehen, welche die einzelnen Zeitungen repräsentieren. Weiterhin wird überprüft, ob sich dabei Cluster ergeben, die Artikel verschiedener Zeitung haben. Das wäre dann schon ein sehr guter Indikator dafür, dass zwei oder mehr Zeitungen einen ähnlichen Schreibstil haben.
+Ein weiterer Ansatz ist es, den Durchschnitt jeder Zeitung zu berechnen und anschließend die Zeitungen zu clustern. Dies hat jedoch Nachteile: Der Durchschnitt einer Zeitung ist nicht besonders repräsentativ, besonders wenn die Standardabweichung hoch ist. Zudem gibt es hier je nach Kategorie nur etwa 8 oder weniger "Beobachtungen" die geclustert werden können.
 \subsection{Feature Extraction}
-\subsection{Clustering}
-\section{Ergebnisse}
+Wie in den Grundlagen bereits beschrieben, ist es beim Clustering besonders wichtig, dass die Dimensionalität nicht hoch ist. Vor allem für die Visualisierung ist es notwendig, die Features auf zwei Dimensionen zu reduzieren.
+\paragraph*{PCA}
+Hauptkomponentenanalyse: welche Ergebnisse gibt es hier?
+\paragraph*{t-SNE}
+Ein Verfahren, was genau dafür gedacht ist visuell Cluster zu zeigen, bei denen die Distanz untereinander im Plot keine Aussagekraft hat. Wie sehen hier die Ergebnisse aus? Spoiler: KACKEE
 
 \chapter{Ergebnis}
 
