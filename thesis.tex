@@ -15,7 +15,7 @@ Themenspezifische Gruppierung deutscher Online-Zeitungen mit Natural Language Pr
 Bachelorarbeit\\
 \vspace{0.4cm}
 \vspace{2 cm}
-Georg Donner \\
+Georg Donner\\
 Matrikel-Nummer 553821\\
 \vspace{8cm}
 \begin{tabular}{rl}
@@ -30,6 +30,8 @@ Matrikel-Nummer 553821\\
 \pagestyle{useheadings} % normale Kopf- und Fußzeilen für den Rest
 
 \tableofcontents % erstelle hier das Inhaltsverzeichnis
+\listoffigures % erstelle hier das Abbildungsverzeichnis
+\clearpage
 
 % richtiger Inhalt
 \pagenumbering{arabic} % ab jetzt die normale arabische Nummerierung
@@ -41,27 +43,39 @@ Diese Arbeit wird am Beispiel deutscher Online-Zeitungen untersuchen, welche Mö
 Des Weiteren wird untersucht, ob und wie sich der Schreibstil einer Zeitung je nach Thema, wie z.B. Politik und Sport, unterscheidet.
 
 \chapter{Grundlagen}
-Wofür werden die folgenden Grundlagen beschrieben, warum relevant zum Thema?
+Für die Verarbeitung und Analyse von Zeitungsartikeln sind zwei Teilgebiete der Informatik besonders wichtig: Natural Language Processing und Machine Learning. Im Folgenden werden die für die Arbeit relevantesten Konzepte der beiden Bereiche genauer erklärt.
 
 \section{Natural Language Processing}
-Teilgebiet der Informatik -> Künstliche Intelligenz und Maschinelles Lernen
+Natural Language Processing ist ein Teilgebiet der Informatik, das Konzepte und Techniken der künstlichen Intelligenz und des Machine Learning verwendet, um natürliche Sprache zu verarbeiten. Der Begriff natürliche Sprache wird verwendet, um menschliche Sprachen zu beschreiben, die im Gegensatz zu künstlich entwickelten Plansprachen eine historische Entwicklung durchlebt haben. Diese Sprachen befinden sich in einem dauerhaften Entwicklungsprozess und sind häufig sehr variabel in ihrer Verwendung durch den Menschen. Die Analyse der Semantik eines Wortes oder Satzes ist für Computer besonders schwierig, da sich die Bedeutung häufig erst durch den Kontext ergibt.
 
-Verarbeitung natürlicher Sprache
--> natürliche Sprache: Menschliche Sprachen, die sich über lange Zeit entwickelt haben
+Mit den schnellen Fortschritten im Bereich des Machine Learning in den letzten Jahrzehnten, eröffneten sich für die Verarbeitung natürlicher Sprache jedoch völlig neue Möglichkeiten. Die Erkennung von Syntax und Semantik wurde damit immer präziser und das Teilgebiet immer relevanter. Gegenwärtig basiert dies hauptsächlich auf Algorithmen des Supervised Learning, für die die Texte vorher manuell mit relevanten Markierungen versehen werden müssen. Ein bekanntes Beispiel für einen Korpus deutscher Sprache mit solchen Annotationen ist der TIGER Corpus \footnote{http://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/tiger.html}.
 
-Große Herausforderung, da menschliche Sprachen sehr variabel sind, da sie sich in einem endlosen Entwicklungsprozess befinden. Die Analyse der Semantik eines Satzes oder Textes ist für Computer besonders schwierig, da sich die Bedeutung häufig erst durch den Kontext ergibt.
+\todo{Verwendung nicht annotierter Korpora}
 
-Mit den schnellen Fortschritten im Bereich des Maschinellen Lernens in den letzten Jahrzehnten, eröffneten sich für die Verarbeitung natürlicher Sprache völlig neue Möglichkeiten. Die Erkennung von Syntax und Semantik wurde damit immer präziser und das Teilgebiet immer relevanter. Jedoch basiert dies immer noch hauptsächlich auf Algorithmen des Supervised Learning für die die Texte vorher manuell annotiert werden müssen. Ein bekanntes Beispiel für einen Korpus deutscher Sprache mit solchen Annotationen ist der TIGER Corpus \footnote{http://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/tiger.html}.
-
-\todo{Unterschied zwischen Englisch und Deutsch, welche Herausforderungen/Einschränkungen gibt es?}
 \subsection{Pipeline}
-Bei der Analyse eines Textes werden in der Regel verschiedene Schritte abgearbeitet, die jeweils eigene Merkmale der Sprache untersuchen. Es entsteht eine so genannte Pipeline, die je nach Anwendungsfall unterschiedlich aussieht. Das sequenzielle Ausführen dieser einzelnen Vorgänge ist notwendig, da beispielsweise die Analyse der Syntax voraussetzt, dass das Dokument bereits in Token zerlegt wurde. Im Folgenden werden die für diese Arbeit relevanten Schritte beschrieben.
+Bei der Analyse eines Textes werden in der Regel verschiedene Schritte abgearbeitet, die jeweils eigene Merkmale der Sprache untersuchen. Es entsteht eine sogenannte Pipeline, die je nach Anwendungsfall unterschiedlich aussieht. Das sequenzielle Ausführen dieser einzelnen Vorgänge ist notwendig, da beispielsweise die Analyse der Syntax voraussetzt, dass das Dokument bereits in Token zerlegt wurde. Im Folgenden werden die für diese Arbeit relevanten Schritte beschrieben.
 
 \todo{eventuell noch andere Modelle beschreiben?}
+
 \subsubsection*{Tokenisierung}
-\subsubsection*{POS-Tagging}
+Tokenisierung beschreibt den Prozess, einen gegebenen Text in gleiche Einheiten, sogenannte Token, zu zerlegen. Meistens handelt es sich dabei um Wörter und Satzzeichen, je nach Anwendungsfall können es aber auch Wortgruppen oder Sätze sein. Die Tokenisierung ist häufig eine Voraussetzung einer tiefgehenderen Analyse des Textes, daher ist eine hohe Genauigkeit hier besonders wichtig. Eine Teilung an jedem Satzzeichen um eine Liste von Sätzen zu erhalten, ist zum Beispiel eine triviale Lösung, die bereits gute Ergebnisse erzielt. Es müssen jedoch viele Sonderregeln wie Abkürzungen und Zahlen beachtet werden, sodass das Problem wesentlich komplexer ist ,als es zunächst scheint. Ein Ansatz um höhere Genauigkeit zu erreicheren, ist ein Modell auf Basis bereits mit Annotationen versehener Korpora zu trainieren, welches die Regeln automatisch erlernt.
+
+\subsubsection*{Part-of-speech-Tagging}
+Das Part-of-speech-Tagging, auch POS-Tagging, ist ein Verfahren, bei dem jedem Wort oder Satzzeichen die jeweilige Wortart zugeordnet wird. Bei der Analyse ist hierbei vor allem der Kontext in dem das Wort erscheint wichtig, da sich daraus häufig erst die Bedeutung ergibt. Die Informationen über die Wortart und oft auch weitere Details, geben sogenannte Tags, die meist aus einem festen Tagset stammen. In dieser Arbeit werden die Tags aus dem Stuttgart-Tübingen-Tagset (STTS) \footnote{http://www.ims.uni-stuttgart.de/forschung/ressourcen/lexika/TagSets/stts-table.html} verwendet. Der Satz "`Martin findet eine grüne Blechdose."' sieht nach dem POS-Tagging beispielsweise so aus:
+
+Martin/NE findet/VVFIN eine/ART grüne/ADJA Blechdose/NN ./\$.
+
+Die Tags geben Auskunft über mehr als nur die Wortart. Die Wörter \textit{Martin} und \textit{Blechdose} sind zum Beispiel beides Nomen. Da jedoch beim POS-Tagging auch die Definition des Wortes überprüft wird, kann \textit{Martin} korrekt als Eigenname mit dem Tag NE identifiziert werden. Weiterhin wurde in diesem Satz die Verbform und der Adjektiv-Typ korrekt erkannt.
+
 \subsubsection*{Dependency Parsing}
+Die Analyse der syntaktischen Struktur eines Satzes ist ein weiterer wichtiger Schritt in der Verarbeitung natürlicher Sprache. Beim Dependency Parsing wird zunächst jeder Satz nur auf seine Wörter reduziert, um dann die Beziehungen, sogenannte Dependency Relations, der Wörter innerhalb dieses Satzes zu bestimmen.
+
+\bild{dependency_relations}{\textwidth}{Visualisierung der Beziehungen mit Pfeilen}{Dependency Relations}
+
+Diese Beziehungen ergeben letztendlich einen Baum, der navigiert werden kann und auch Aufschlüsse über die Komplexität eines Satzes zulässt. Die Ergebnisse des Dependency Parsing finden neben der Erkennung semantischer Beziehungen zwischen Wörtern auch noch weitere Anwendungen. So werden sie z.B. von dem Natural Language Processing Tool SpaCy für die Erkennung der Satzenden  verwendet \cite{spacyDependencyParsing}.
+
 \subsubsection*{Lemmatisierung}
+
 \section{Machine Learning}
 Was ist Machine Learning? Erklärung der Basics, die für diese Arbeit relevant sind.
 \subsection{Feature Engineering}
@@ -151,7 +165,6 @@ Ein Verfahren, was genau dafür gedacht ist visuell Cluster zu zeigen, bei denen
 
 \bibliographystyle{alphadin_martin}
 \bibliography{bibliographie}
-\listoffigures % erstelle hier das Abbildungsverzeichnis
 
 \chapter*{Erklärung}
 
