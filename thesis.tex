@@ -65,7 +65,7 @@ Das Part-of-speech-Tagging, auch POS-Tagging, ist ein Verfahren, bei dem jedem W
 
 Martin/NE findet/VVFIN eine/ART grüne/ADJA Blechdose/NN ./\$.
 
-Die Tags geben Auskunft über mehr als nur die Wortart. Die Wörter \textit{Martin} und \textit{Blechdose} sind zum Beispiel beides Nomen. Da jedoch beim POS-Tagging auch die Definition des Wortes überprüft wird, kann \textit{Martin} korrekt als Eigenname mit dem Tag NE identifiziert werden. Weiterhin wurde in diesem Satz die Verbform und der Adjektiv-Typ korrekt erkannt.
+Die Tags geben Auskunft über mehr als nur die Wortart. Zum Beispiel sind die beiden Wörter \textit{Martin} und \textit{Blechdose} jeweils Nomen. Da jedoch beim POS-Tagging auch die Definition des Wortes überprüft wird, kann \textit{Martin} korrekt als Eigenname mit dem Tag NE identifiziert werden. Weiterhin wurde in diesem Satz die Verbform und der Adjektiv-Typ korrekt erkannt.
 
 \subsubsection*{Dependency Parsing}
 Die Analyse der syntaktischen Struktur eines Satzes ist ein weiterer wichtiger Schritt in der Verarbeitung natürlicher Sprache. Beim Dependency Parsing wird zunächst jeder Satz nur auf seine Wörter reduziert, um dann die Beziehungen, sogenannte Dependency Relations, der Wörter innerhalb dieses Satzes zu bestimmen.
@@ -75,9 +75,9 @@ Die Analyse der syntaktischen Struktur eines Satzes ist ein weiterer wichtiger S
 Diese Beziehungen ergeben letztendlich einen Baum, der navigiert werden kann und auch Aufschlüsse über die Komplexität eines Satzes zulässt. Die Ergebnisse des Dependency Parsing finden neben der Erkennung semantischer Beziehungen zwischen Wörtern auch noch weitere Anwendungen. So werden sie z.B. von dem Natural Language Processing Tool SpaCy für die Erkennung der Satzenden  verwendet \cite{spacyDependencyParsing}.
 
 \subsubsection*{Lemmatisierung}
+Für viele Analysen eines Textes ist es von Vorteil oder sogar notwendig, dass nicht jedes Wort welches unterschiedlich geschrieben wird, als ein anderes Wort behandelt wird. Um dies zu erreichen, werden alle Wörter auf ihre Grundform reduziert. Dieser Prozess heißt Lemmatisierung. Dies ist besonders hilfreich für die Feststellung der Häufigkeit eines Wortes in einem Dokument oder Korpus. So wäre die Frequenz der Wörter \textit{findet}, \textit{fand} und \textit{finden} zunächst jeweils eins. Nach der Lemmatisierung gibt es nur noch das Lemma \textit{finden} mit einer Frequenz von drei. Dies hilft dabei, das Rauschen innerhalb eines Textes zu reduzieren und das tatsächliche Vokabular genauer zu beurteilen.
 
 \section{Machine Learning}
-Was ist Machine Learning? Erklärung der Basics, die für diese Arbeit relevant sind.
 \subsection{Feature Engineering}
 Was bedeutet Feature Engineering? Sehr wichtiger Schritt; ausschlaggebend für das letztendliche Resultat. In Natural Language Processing sehr viele verschiedene Ansätze: teilweise Studien die sich nur damit befassen, welche Features es gibt/am besten geeignet sind um xy zu erkennen/erreichen. Anreißen welche Ansätze es gibt und welche in dieser Arbeit nicht berücksichtigt werden. Dieser Prozess wird Feature Selection genannt und ist sehr wichtig aus verschiedenen Gründen: Dimensionalität, Noise Reduction, kürzere Trainingszeiten (aus Wikipedia en).
 \subsection{Dimensionsionalitätsreduktion}
