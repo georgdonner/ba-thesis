@@ -95,10 +95,13 @@ Falls es nur zwei mögliche Klassen gibt, spricht man von \emph{Binärer Klassif
 Klassifizierung ist ein häufiges Problem, für das es aufgrund der vielen Anwendungsbereiche und damit völlig unterschiedlichen Anforderungen keinen besten Algorithmus zur Bestimmung der Klasse bzw. der Wahrscheinlichkeit gibt. Die meisten dieser Algorithmen erstellen eine lineare Funktion, in die der Featurevektor anschließend eingesetzt wird. Jedes Feature bekommt hierbei eine eigene Gewichtung, die sich aus dem vorherigen Training ergibt. Dieses Training unterscheidet sich je nach Algorithmus und auch der zurückgegebene Score wird je nach Algorithmus unterschiedlich interpretiert.
 
 \chapter{Textverarbeitung}
-Welche Schritte sind erforderlich, was muss besonders berücksichtigt werden?
+Die Grundlage dieser Arbeit bildet ein großer Datensatz mit Artikeln verschiedener Online-Zeitungen. Damit diese Artikel verglichen werden können oder eine Klassifizierung durchgeführt werden kann, müssen diese zunächst jeweils in einen Featurevektor umgewandelt werden. Dieses Kapitel beschreibt die verwendeten Tools und nötigen Schritte um dieses Ziel zu erreichen.
+
 \section{Verwendete Tools}
+
 \subsection{Python}
-Python ist die am häufigsten für Machine Learning verwendete Sprache und es gibt eine Vielzahl an packages die für nlp/ml optimiert sind. Welche packages wurden für diese Arbeit primär genutzt und warum so gut? Zwei sehr wichtige im Detail, sonst noch Numpy, Pandas und Matplotlib? Anaconda?
+Python ist eine sehr universelle Programmiersprache und wird für die unterschiedlichsten Anwendungen eingesetzt. Die Syntax ist einfach zu erlernen und legt besonderen Wert auf gute Lesbarkeit, was wiederum die Produktivität der Programmierer erhöht \cite{pythonSummary}. Des Weiteren gibt es eine große Auswahl an Bibliotheken für viele verschiedene Anwendungsfälle. Besonders in der wissenschaftlichen Arbeit hat sich die Verwendung von Python zusammen mit den Packages SciPy, NumPy und Pandas bewährt. Auf Basis dieser Kombination entwickelte sich die Anaconda Distribution \footnote{https://www.anaconda.com/what-is-anaconda/}, welche die wichtigsten Bibliotheken für Data Science und Machine Learning beinhaltet und die Verwaltung dieser pro Projekt erleichtert. Die Verwendung einer solchen Distribution ermöglicht es, out-of-the-box Optimierungen mathematischer Berechnungen durchzuführen, unter anderem auf Basis der Intel™ Math Kernel Library (MKL). Dadurch konnte in dieser Arbeit zum Beispiel die Analyse der Artikel mit spaCy um etwa 27\% beschleunigt werden.
+
 \subsection{SpaCy}
 Was kann Spacy alles? Warum für Spacy entschieden? (ist für die deutsche Sprache schon sehr ausgereift). Vergleich zu anderen NLP tools und Überblick über die tatsächliche Schnelligkeit auf meiner Maschine beim processen?
 \subsection{Scikit-learn}
