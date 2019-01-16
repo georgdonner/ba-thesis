@@ -111,9 +111,34 @@ Eine häufig verwendete Alternative zu spaCy ist NLTK, kurz für Natural Languag
 \emph{Scikit-learn} ist eine Python Bibliothek, welche eine Vielzahl an effizienten Algorithmen aus dem Bereich des Machine Learning zur Verfügung stellt \cite{scikit-learn}. Sie baut auf den bereits in Kapitel \ref{python} genannten Bibliotheken SciPy, NumPy und Matplotlib auf und bietet ebenfalls eine nahtlose Integration mit ihnen. Zudem gibt es eine sehr ausführliche und einsteigerfreundliche Dokumentation, die über die Beschreibung der in der Bibliothek enthaltenen Funktionen hinaus auch ausführliche Tutorials beinhaltet.
 
 \section{Datenselektion}
-Die Auswahl der Daten ist Grundlage für alles, blabla
+Bevor die gegebenen Daten für das Extrahieren von Features verwendet werden, ist es ratsam zunächst einen Überblick über die Struktur zu bekommen. Häufig befinden sich fehlerhafte Daten im Datensatz und auch das Format entspricht nicht immer den Erwartungen oder ist unregelmäßig. Die in dieser Arbeit getroffenen Maßnahmen, um den Datensatz bereit für die Textverarbeitung zu machen, werden in diesem Kapitel genauer erläutert.
+
 \subsection{Datensatz}
-Woher kommt der Datensatz? Wie groß? Welche Zeitungen? Überblick der Zeitspanne. Illustration wie verschieden die Artikel sind?
+Der in dieser Arbeit verwendete Datensatz wurde von Ole Wendt erstellt und enthält Artikel bis Juni 2018 für neun verschiedene Zeitungen. Die Daten stehen pro Zeitung als SQLite Datenbank zur Verfügung. Tabelle \ref{data} lässt erkennen, dass die Anzahl der Artikel je nach Zeitung sehr unterschiedlich ist.
+
+\begin{table}[h]
+\centering
+\begin{tabular}[t]{lrr}
+\toprule
+Zeitung & Anzahl der Artikel \\
+\midrule
+Ärzte-Zeitung & 132753 \\
+Handelsblatt & 942362 \\
+RP Online & 1549537 \\
+SHZ & 347335 \\
+Spiegel Online & 620213 \\
+Der Tagesspiegel & 975483 \\
+Westfälischer Anzeiger & 318910 \\
+Welt & 2980800 \\
+Zeit Online & 2242198 \\
+\bottomrule
+\end{tabular}
+\caption{Größe des Datensatzes}
+\label{data}
+\end{table}
+
+Die für diese Arbeit relevanten Attribute des Datensatzes sind \texttt{content}, \texttt{url} und \texttt{date}. Diese sind jeweils in Textform gespeichert. Die URL eines Artikels wird später benötigt, um diesen einer Kategorie zuverlässig zuordnen zu können.
+
 \subsection{Normalisierung}
 Welche Normalisierungen mussten vor der Aufbereitung durchgeführt werden: Herausfiltern von viel zu kurzen Artikeln/Artikeln ohne Inhalt, Zuordnung von Kategorien zu jedem Artikel, Vereinheitlichung des Formats des Datums (ISO). Oft veröffentlichen Zeitungen auch Artikel einer Newsagentur wie z.B. der dpa, diese müssen herausgefiltert werden, um den Schreibstil einer Zeitung ermitteln zu können (nur Artikel von Autoren der Zeitung sollen berücksichtigt werden). Illustration zum Anteil der dpa Artikel.
 \section{Textaufbereitung}\label{textprocessing}
