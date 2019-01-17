@@ -90,7 +90,7 @@ Um so viele Informationen wie möglich zu jeder Beobachtung zu speichern und fü
 \subsection{Klassifizierung}
 Um die Performance der Features messen zu können, wird in dieser Arbeit Klassifizierung verwendet. Dafür werden alle Beobachtungen zunächst in ein Trainings- und ein Testset unterteilt, um das trainierte Modell nach dem Lernen mit den Testdaten beurteilen zu können. Nach dem Training ist die Aufgabe des Modells, jeder neuen Beobachtung aus dem Testset eine Klasse aus einer Liste bereits bekannter Klassen zuzuordnen. Die Klassen der jeweiligen Beobachtungen aus dem Trainingsset sind bekannt.
 
-Falls es nur zwei mögliche Klassen gibt, spricht man von \emph{Binärer Klassifikation}. Eine häufige Herangehensweise bei mehr als zwei Klassen ist es, die Aufgabe in mehrere binäre Probleme zu zerlegen, bei der nach der \emph{One-vs.-all} Strategie entschieden wird, welche Klasse zugewiesen wird. Dabei wird für jede mögliche Klasse eine Wahrscheinlichkeit bzw. Sicherheit berechnet und anschließend gewinnt die mit dem höchsten Wert.
+Falls es nur zwei mögliche Klassen gibt, handelt es sich um eine \emph{Binärer Klassifikation}. Eine häufige Herangehensweise bei mehr als zwei Klassen ist es, die Aufgabe in mehrere binäre Probleme zu zerlegen, bei der nach der \emph{One-vs.-all} Strategie entschieden wird, welche Klasse zugewiesen wird. Dabei wird für jede mögliche Klasse eine Wahrscheinlichkeit bzw. Sicherheit berechnet und anschließend gewinnt die mit dem höchsten Wert.
 
 Klassifizierung ist ein häufiges Problem, für das es aufgrund der vielen Anwendungsbereiche und damit völlig unterschiedlichen Anforderungen keinen besten Algorithmus zur Bestimmung der Klasse bzw. der Wahrscheinlichkeit gibt. Die meisten dieser Algorithmen erstellen eine lineare Funktion, in die der Featurevektor anschließend eingesetzt wird. Jedes Feature bekommt hierbei eine eigene Gewichtung, die sich aus dem vorherigen Training ergibt. Dieses Training unterscheidet sich je nach Algorithmus und auch der zurückgegebene Score wird je nach Algorithmus unterschiedlich interpretiert.
 
@@ -114,11 +114,11 @@ Eine häufig verwendete Alternative zu spaCy ist NLTK, kurz für Natural Languag
 Bevor die gegebenen Daten für das Extrahieren von Features verwendet werden, ist es ratsam zunächst einen Überblick über die Struktur zu bekommen. Häufig befinden sich fehlerhafte Daten im Datensatz und auch das Format entspricht nicht immer den Erwartungen oder ist unregelmäßig. Die in dieser Arbeit getroffenen Maßnahmen, um den Datensatz bereit für die Textverarbeitung zu machen, werden in diesem Kapitel genauer erläutert.
 
 \subsection{Datensatz}
-Der in dieser Arbeit verwendete Datensatz wurde von Ole Wendt erstellt und enthält Artikel bis Juni 2018 für neun verschiedene Zeitungen. Die Daten stehen pro Zeitung als SQLite Datenbank zur Verfügung. Tabelle \ref{data} lässt erkennen, dass die Anzahl der Artikel je nach Zeitung sehr unterschiedlich ist.
+Der in dieser Arbeit verwendete Datensatz wurde von Ole Wendt erstellt und enthält etwas mehr als zehn Millionen Artikel bis Juni 2018 für neun verschiedene Zeitungen. Tabelle \ref{data} lässt jedoch erkennen, dass die Anzahl der Artikel je nach Zeitung sehr unterschiedlich ist. Für die Speicherung der Daten wurde das relationale Datenbanksystem \emph{SQLite} gewählt.
 
 \begin{table}[h]
 \centering
-\begin{tabular}[t]{lrr}
+\begin{tabular}[t]{lr}
 \toprule
 Zeitung & Anzahl der Artikel \\
 \midrule
@@ -137,13 +137,23 @@ Zeit Online & 2242198 \\
 \label{data}
 \end{table}
 
-Die für diese Arbeit relevanten Attribute des Datensatzes sind \texttt{content}, \texttt{url} und \texttt{date}. Diese sind jeweils in Textform gespeichert. Die URL eines Artikels wird später benötigt, um diesen einer Kategorie zuverlässig zuordnen zu können.
+Die für diese Arbeit relevanten Datenfelder eines Artikels sind \texttt{content}, \texttt{url} und \texttt{date}, welche jeweils in Textform gespeichert sind. Es existieren weitere interessante Felder für z.B. den Autor oder die Zusammenfassung eines Artikels. Ein genauerer Blick in den Datensatz ergibt jedoch, dass diese bei dem Großteil der Einträge fehlen und somit nicht für die Analyse genutzt werden können.
 
 \subsection{Normalisierung}
-Welche Normalisierungen mussten vor der Aufbereitung durchgeführt werden: Herausfiltern von viel zu kurzen Artikeln/Artikeln ohne Inhalt, Zuordnung von Kategorien zu jedem Artikel, Vereinheitlichung des Formats des Datums (ISO). Oft veröffentlichen Zeitungen auch Artikel einer Newsagentur wie z.B. der dpa, diese müssen herausgefiltert werden, um den Schreibstil einer Zeitung ermitteln zu können (nur Artikel von Autoren der Zeitung sollen berücksichtigt werden). Illustration zum Anteil der dpa Artikel.
+Für die Normalisierung der Daten werden zunächst alle Artikel entfernt, die weniger als 100 Zeichen haben. Dies ist notwendig, da ein kleiner Teil der Artikel entweder gar keinen Inhalt besitzt oder nur eine kurze Eilmeldung ist.
+
+Eine weitere Auffälligkeit bei der Betrachtung des Datensatzes ist, dass das Datum je nach Zeitung in einem unterschiedlichen Format gespeichert ist. Zudem müssen erneut Artikel ohne Datum herausgefiltert werden. Die Sortierung der Artikel nach Datum funktioniert trotzdem sehr zuverlässig, sodass die Artikel erst sortiert und anschließend das Datum formatiert werden kann. Obwohl das Datum später nicht direkt weiterverarbeitet wird, ist ein einheitliches Format, in dieser Arbeit wird der ISO 8601 Standard verwendet, dennoch wichtig für die Visualisierung der Daten. Für diesen Schritt ist die Python Funktion \texttt{datetime.strptime} sehr hilfreich, da damit auch Daten wie "`1. März 2018, 9:11 Uhr"' einfach geparst werden können.
+
+Die Klassifizierung der Zeitungen soll \emph{themenspezifisch} erfolgen, das heißt jedem Artikel soll idealerweise ein Thema bzw. eine Kategorie zugeordnet werden. Dafür werden im Rahmen dieser Arbeit sehr grobe Themen wie Politik, Wirtschaft oder Sport angestrebt. Für die Bestimmung dieser Themen bietet sich die URL des Artikels an, da die Webseiten der Zeitungen, wie Abbildung \ref{img.spiegel_struktur} verdeutlicht, meist nach solchen Themen strukturiert sind. Dies spiegelt sich dann im Format der URL wider.
+
+\bild{spiegel_struktur}{15cm}{Die Struktur der Spiegel Online Webseite}{Spiegel Online Struktur}
+
+Je nach Zeitung ergeben sich hierbei unterschiedliche Themen und nicht jedem Artikel kann auf diese Weise zuverlässig ein Thema zugeordnet werden. Zudem unterscheidet sich die Anzahl der Artikel je nach Thema stark, sodass einige aufgrund zu kleiner Repräsentation aussortiert werden.
+
 \section{Textaufbereitung}\label{textprocessing}
 Analyse der Texten mit einem Natural Language Processing Tool, das die zuvor beschriebene Pipeline durchläuft (SpaCy). Vorherige Ansätze?
 
+Oft veröffentlichen Zeitungen auch Artikel einer Newsagentur wie z.B. der dpa, diese müssen herausgefiltert werden, um den Schreibstil einer Zeitung ermitteln zu können (nur Artikel von Autoren der Zeitung sollen berücksichtigt werden). Illustration zum Anteil der dpa Artikel.
 Nachbereitung der Texte: Entfernen von vermeintlichen Sätzen mit weniger als 4 Wörtern. Musste dort sehr rigoros sein, da jeglicher Inhalt mit enthalten war, so auch Kürzel wie (dpa), der Ort, Autor, Quellen oder Verweise.
 \section{Featuregenerierung}
 Es gibt eine Vielzahl an Features, die man für einen Text generieren bzw. auswählen kann, ohne dass dabei der Inhalt des Artikels einen Einfluss hat. Verweis zu Studien, die analysiert haben, welche Kombination an Features die besten Resultate liefern.
