@@ -94,7 +94,7 @@ Falls es nur zwei mögliche Klassen gibt, handelt es sich um eine \emph{Binärer
 
 Klassifizierung ist ein häufiges Problem, für das es aufgrund der vielen Anwendungsbereiche und damit völlig unterschiedlichen Anforderungen keinen besten Algorithmus zur Bestimmung der Klasse bzw. der Wahrscheinlichkeit gibt. Die meisten dieser Algorithmen erstellen eine lineare Funktion, in die der Featurevektor anschließend eingesetzt wird. Jedes Feature bekommt hierbei eine eigene Gewichtung, die sich aus dem vorherigen Training ergibt. Dieses Training unterscheidet sich je nach Algorithmus und auch der zurückgegebene Score wird je nach Algorithmus unterschiedlich interpretiert.
 
-\chapter{Textverarbeitung}
+\chapter{Datenverarbeitung}
 Die Grundlage dieser Arbeit bildet ein großer Datensatz mit Artikeln verschiedener Online-Zeitungen. Damit diese Artikel verglichen werden können oder eine Klassifizierung durchgeführt werden kann, müssen diese zunächst jeweils in einen Featurevektor umgewandelt werden. Dieses Kapitel beschreibt die verwendeten Tools und nötigen Schritte um dieses Ziel zu erreichen.
 
 \section{Verwendete Tools}
@@ -150,12 +150,22 @@ Die Klassifizierung der Zeitungen soll \emph{themenspezifisch} erfolgen, das hei
 
 Je nach Zeitung ergeben sich hierbei unterschiedliche Themen und nicht jedem Artikel kann auf diese Weise zuverlässig ein Thema zugeordnet werden. Zudem unterscheidet sich die Anzahl der Artikel je nach Thema stark, sodass einige aufgrund zu kleiner Repräsentation aussortiert werden.
 
-\section{Textaufbereitung}\label{textprocessing}
-Analyse der Texten mit einem Natural Language Processing Tool, das die zuvor beschriebene Pipeline durchläuft (SpaCy). Vorherige Ansätze?
+\section{Textverarbeitung}\label{textprocessing}
+Bei der Textverarbeitung durchläuft eine Auswahl an Artikeln die in Kapitel \ref{pipeline} beschriebene Pipeline und die Ergebnisse werden dann für die weitere Verwendung zwischengespeichert.
 
-Oft veröffentlichen Zeitungen auch Artikel einer Newsagentur wie z.B. der dpa, diese müssen herausgefiltert werden, um den Schreibstil einer Zeitung ermitteln zu können (nur Artikel von Autoren der Zeitung sollen berücksichtigt werden). Illustration zum Anteil der dpa Artikel.
-Nachbereitung der Texte: Entfernen von vermeintlichen Sätzen mit weniger als 4 Wörtern. Musste dort sehr rigoros sein, da jeglicher Inhalt mit enthalten war, so auch Kürzel wie (dpa), der Ort, Autor, Quellen oder Verweise.
-\section{Featuregenerierung}
+Der erste Ansatz für die Verarbeitung der Texte war es, für jeden Schritt in der Pipeline ein explizit für dieses Verfahren entwickeltes Tool zu verwenden. Für die Tokenisierung wurde hier zunächst die populäre Bibliothek NLTK verwendet, welche bereits sehr gute Resultate bei annehmbarer Performanz lieferte. Für das POS-Tagging wurde der von Helmut Schmid entwickelte TreeTagger \footnote{http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/} verwendet, welcher zusätzlich das Lemma jedes Wortes bestimmt. Dieser unterstützt eine Vielzahl an Sprachen, da pro Sprache lediglich eine Parameterdatei notwendig ist. Die Verwendung des TreeTaggers bringt jedoch auch einige Nachteile mit sich. Er wird nur als Perl Skript zur Verfügung gestellt und kann so nur über Umwege in die Python Pipeline integriert werden. Zudem ist die Startzeit des Skriptes pro Artikel sehr hoch, sodass die Berechnung zu zeitaufwendig wird. Dies kann umgangen werden, indem die Artikel zuvor zu einem großen Text zusammengefügt und anschließend wieder getrennt werden und führte zu einer sehr hohen Performanz. Dadurch werden jedoch Ungenauigkeiten in den Ergebnissen riskiert und an einigen Stellen stoppte das Skript ohne einen Fehler zu werfen. Ein weiteres Problem dieses Ansatzes ist, dass durch die Ausführung der Pipeline in einzelnen Schritten die Ergebnisse jedes Schrittes zwischengespeichert werden müssen und eventuell später zu groß für den Arbeitsspeicher werden.
+
+Im zweiten Ansatz wurde mehr Wert auf die Zuverlässigkeit der Ergebnisse statt der Optimierung der Geschwindigkeit des Prozesses gelegt. Hierfür wurden zunächst 1000 Artikel pro Zeitung pro Thema verwendet, insgesamt 43000 Artikel, und mit der Bibliothek spaCy analysiert. Die Erstellung und Ausführung einer Pipeline mit spaCy ist sehr intuitiv und erfordert kaum Setup. Dennoch gibt es auch hier Möglichkeiten, die Performanz zu optimieren.
+
+\todo{Überblick spaCy Geschwindigkeit und Optimierungen}
+
+Die Anzahl der analysierten Artikel wurde zunächst beschränkt, um die Größe der Dateien, welche die Ergebnisse der Textverarbeitung beinhalten, gering zu halten. Für 43000 Artikel werden hier etwa 3,4 GB benötigt, indem nur die für diese Arbeit relevanten linguistischen Merkmale der Token gespeichert werden. Dies ermöglicht einen schnellen, iterativen Prozess für die Generierung, Auswahl und Bewertung der in Kapitel \ref{features} beschriebenen Features.
+
+Nach der Analyse der Texte wurde eine weitere Filterung der Artikel vorgenommen, um den Anteil fehlerhafter Daten zu reduzieren. Es wurden hierfür jegliche Sätze mit weniger als vier Wörtern entfernt. Diese rigorose Filterung war notwendig da viele Artikel Wörter beinhalten, die nicht zum eigentlichen Inhalt gehören. Beispiele dafür sind Kürzel der Nachrichtenagentur, der Ort, der Autor, Quellen oder Verweise am Anfang oder Ende des Artikels. Zudem wurden Artikel der Nachrichtenagentur dpa herausgefiltert, um nur die Artikel von eigenen Autoren der Zeitungen zu vergleichen.
+
+\todo{Bild zum Anteil der dpa Artikel}
+
+\section{Featuregenerierung}\label{features}
 Es gibt eine Vielzahl an Features, die man für einen Text generieren bzw. auswählen kann, ohne dass dabei der Inhalt des Artikels einen Einfluss hat. Verweis zu Studien, die analysiert haben, welche Kombination an Features die besten Resultate liefern.
 \subsection{Token-basiert}
 Durchschnittliche Satzlänge, durchschnittliche Wortlänge?
