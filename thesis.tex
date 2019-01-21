@@ -161,9 +161,11 @@ Im zweiten Ansatz wurde mehr Wert auf die Zuverlässigkeit der Ergebnisse statt 
 
 Die Anzahl der analysierten Artikel wurde zunächst beschränkt, um die Größe der Dateien, welche die Ergebnisse der Textverarbeitung beinhalten, gering zu halten. Für 43000 Artikel werden hier etwa 3,4 GB benötigt, indem nur die für diese Arbeit relevanten linguistischen Merkmale der Token gespeichert werden. Dies ermöglicht einen schnellen, iterativen Prozess für die Generierung, Auswahl und Bewertung der in Kapitel \ref{features} beschriebenen Features.
 
-Nach der Analyse der Texte wurde eine weitere Filterung der Artikel vorgenommen, um den Anteil fehlerhafter Daten zu reduzieren. Es wurden hierfür jegliche Sätze mit weniger als vier Wörtern entfernt. Diese rigorose Filterung war notwendig da viele Artikel Wörter beinhalten, die nicht zum eigentlichen Inhalt gehören. Beispiele dafür sind Kürzel der Nachrichtenagentur, der Ort, der Autor, Quellen oder Verweise am Anfang oder Ende des Artikels. Zudem wurden Artikel der Nachrichtenagentur dpa herausgefiltert, um nur die Artikel von eigenen Autoren der Zeitungen zu vergleichen.
+Nach der Analyse der Texte wurde eine weitere Filterung der Artikel vorgenommen, um den Anteil fehlerhafter Daten zu reduzieren. Es wurden hierfür jegliche Sätze mit weniger als vier Wörtern entfernt. Diese rigorose Filterung war notwendig da viele Artikel Wörter beinhalten, die nicht zum eigentlichen Inhalt gehören. Beispiele dafür sind Kürzel der Nachrichtenagentur, der Ort, der Autor, Quellen oder Verweise am Anfang oder Ende des Artikels.
 
-\todo{Bild zum Anteil der dpa Artikel}
+\bild{dpa_share}{\textwidth}{Anteil der dpa Artikel pro Zeitung}{Anteil dpa Artikel pro Zeitung}
+
+Zudem wurden Artikel der Nachrichtenagentur dpa herausgefiltert, um nur die Artikel von eigenen Autoren der Zeitungen zu vergleichen. Wie in Abbildung \ref{img.dpa_share} zu sehen, unterscheidet sich der Anteil je nach Zeitung sehr stark, ist allerdings auch abhängig von der Kategorie. So ist der Anteil an dpa Artikeln der \emph{Zeit} etwa 25\%, betrachtet man nur die Politik Artikel sind es nicht einmal 0,1\%.
 
 \section{Featuregenerierung}\label{features}
 Es gibt eine Vielzahl an Features, die man für einen Text generieren bzw. auswählen kann, ohne dass dabei der Inhalt des Artikels einen Einfluss hat. Verweis zu Studien, die analysiert haben, welche Kombination an Features die besten Resultate liefern.
