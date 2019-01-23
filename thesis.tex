@@ -177,10 +177,8 @@ Weiterhin existieren diverse Indizes, welche versuchen, die Lesbarkeit auf einer
 
 \(FG = 180 - \frac{W}{T} - (58,5 \cdot \frac{S}{W})\)
 
-$ S $ ist die Gesamtzahl der Silben
-
-$ W $ ist die Gesamtzahl der Wörter
-
+$ S $ ist die Gesamtzahl der Silben\\
+$ W $ ist die Gesamtzahl der Wörter\\
 $ T $ ist die Gesamtzahl der Sätze
 
 In dieser Arbeit soll überprüft werden, ob die Lesbarkeit eines Artikels zur Erkennung der Zeitung beiträgt und daher wird daher zunächst in das verwendete Featureset aufgenommen und später genauer analysiert.
@@ -189,18 +187,35 @@ Ein weiteres, sehr häufig gemessenes Merkmal eines Textes ist die Reichhaltigke
 
 Die Frequenzen der Wörter oder Lemmata eines Textes zu berechnen, ist ein sehr einfacher, aber doch sehr typischer Ansatz, um den gegebenen Text in einen Featurevektor umzuwandeln. Um diese miteinander vergleichen zu können, muss vorher bekannt sein, welche Wörter dafür insgesamt berücksichtigt werden. Eine sehr simple Methode hierfür ist das Bag-of-words Model, welches für jeden Text die Frequenz für jedes im gesamten Korpus vorkommenden Wort oder Lemma berechnet. Kombiniert mit einem Index wie dem Tf-idf-Maß, liefert diese Darstellung eines Textes auch für die Erkennung der Autorschaft gute Ergebnisse \cite[S.~12]{sebastiani2002machine}. Mit dieser Herangehensweise werden neben dem Schreibstil aber auch maßgeblich der Inhalt des Textes repräsentiert, weswegen diese Methode in dieser Arbeit nicht in Betracht gezogen wird. Hier ergibt es Sinn, nur für Synsemantika, Wörter welche keine inhaltliche Relevanz besitzen, die Frequenzen zu berechnen. Auf diese Weise ist die Analyse des Textes weniger vom Inhalt abhängig und die verwendeten Wörter sind repräsentativer, da sie von jedem Autor genutzt werden. Zudem wird argumentiert, dass die Verwendung von Synsemantika durch den Autor weniger kontrolliert ist und somit den Schreibstil stärker prägen \cite[S.~60-61]{kestemont2014function}. Die Verwendung dieser Frequenzen als Features hat sich sowohl im Bereich der Erkennung der Autorschaft, als auch des Genres als sehr nützlich erwiesen \cite{cimino2017identifying,stamatatos2009survey,zheng2006framework,argamon2005measuring}. Dafür werden in Anlehnung an \cite{cimino2017identifying} in dieser Arbeit die 100 häufigsten Lemmata des Korpus bestimmt und anschließend für jeden Artikel die Frequenzen errechnet.
 
-Es gibt viele weitere Ansätze, Texte nur mithilfe von lexikalischen Merkmalen in einen Featurevektor umzuwandeln. Eine sehr bewährte Methode ist es, statt ganzen Wörtern oder Lemmata, N-Gramme der Buchstaben als Features zu verwenden \cite[S.~542]{stamatatos2009survey}. So wird bei der Berechnung von 3-Grammen zum Beispiel das Wort \textit{Rausch} in \textit{Rau}, \textit{aus}, \textit{usc} und \textit{sch} zerlegt. Untersuchungen von E. Stamatatos ergaben, dass diese Methode selbst bei der Verwendung von Trainings- und Testkorpora zu einem jeweils unterschiedlichen Thema noch gute Ergebnisse erzielt und N-Gramm-Frequenzen als Features wesentlich robuster als Wortfrequenzen sind \cite{stamatatos2013robustness}. Ein hiermit einhergehendes Problem ist jedoch die unglaublich hohe Dimensionalität der daraus resultierenden Featurevektoren. Für das Clustering oder die Gruppierung von Artikeln sind diese Ansätze damit weitaus schlechter geeignet als für die Klassifizierung.
+Es gibt viele weitere Ansätze, Texte nur mithilfe von lexikalischen Merkmalen in einen Featurevektor umzuwandeln. Eine sehr bewährte Methode ist es, statt ganzen Wörtern oder Lemmata, N-Gramme der Buchstaben als Features zu verwenden \cite[S.~542]{stamatatos2009survey}. So wird bei der Berechnung von Trigrammen zum Beispiel das Wort \textit{Rausch} in \textit{Rau}, \textit{aus}, \textit{usc} und \textit{sch} zerlegt. Untersuchungen von E. Stamatatos ergaben, dass diese Methode selbst bei der Verwendung von Trainings- und Testkorpora zu einem jeweils unterschiedlichen Thema noch gute Ergebnisse erzielt und N-Gramm-Frequenzen als Features wesentlich robuster als Wortfrequenzen sind \cite{stamatatos2013robustness}. Ein hiermit einhergehendes Problem ist jedoch die unglaublich hohe Dimensionalität der daraus resultierenden Featurevektoren. Für das Clustering oder die Gruppierung von Artikeln sind diese Ansätze damit weitaus schlechter geeignet als für die Klassifizierung.
 
 % Type-token ratio: Beurteilt die Reichhaltigkeit des Vokabulars, dafür gibt es noch mehr präzisere Indizes (in der Studie von 2000 sind einige Beispiele). Nachteil: funktioniert besser, je länger die Texte sind und die Artikel sind durchschnittlich nicht besonders lang. Illustration dazu?
 
-\subsection{Morphologisch}
-
-
-POS unigrams: Die Frequenz der einzelnen Wortarten für jeden Artikel, ist teilweise nur sehr gering und auch hier erhöht sich die Aussagekraft mit der Länge des Artikels.
-
-Lexical Density: Wieviele Wörter des Artikels tragen zum Inhalt bei (Nomen, Verben, Adjektive, Adverbien) im Verhältnis zur Gesamtanzahl an Wörtern? Ähnlich zur Stopword Frequency, die auch berechnet wurde, aber zu sehr mit der lexikalischen Dichte korreliert.
 \subsection{Syntaktisch}
-Dependency relation unigrams: Die Frequenz der einzelnen Dependency relations für jeden Artikel, ist teilweise nur sehr gering und auch hier erhöht sich die Aussagekraft mit der Länge des Artikels.
+Ein wesentlich aufwendigeres Verfahren um weitere Features zu generieren, ist die Analyse der Syntax. Es wird argumentiert, dass sich Autoren unbewusst syntaktische Muster beim Schreiben angewöhnen und damit den Schreibstil zuverlässiger repräsentiert als lexikalische Merkmale \cite[S.~542]{stamatatos2009survey}. Auch für die Erkennung von Genres wurde festgestellt, dass syntaktische Merkmale eine Schlüsselrolle spielen und die Genauigkeit signifikant erhöhen konnten \cite{cimino2017identifying}.
+
+Für die Bestimmung syntaktischer Merkmale eines Textes ist allerdings nicht nur die Tokenisierung notwendig, sondern auch das POS-Tagging. Da dieses Verfahren nicht komplett akkurat ist, wird durch die Verwendung von darauf aufbauenden Features möglicherweise weiteres Rauschen hinzugefügt, welches die Ergebnisse beeinträchtigen kann. Da in dieser Arbeit nur Zeitungsartikel analysiert werden, welche kaum syntaktische Fehler enthalten und die Genauigkeit für das POS-Tagging von spaCy derzeit bei 97.15\% liegt \cite{spacyAccuracy}, wird davon ausgegangen, dass die Verwendung syntaktischer Features keinen signifikanten negativen Einfluss hat. In dieser Arbeit wurden auch die Ergebnisse des Dependency Parsing mit in Betracht gezogen, da diese einen noch tieferen Einblick in die Struktur der Sätze erlauben. Das Risiko des Rauschens ist aufgrund der geringeren Genauigkeit von 89.75\% von spaCy \cite{spacyAccuracy} jedoch hier wesentlich höher.
+
+Ähnlich zu den Wortfrequenzen als lexikalisches Merkmal, werden in dieser Arbeit auch für die POS-Tags die Frequenzen für jeden Artikel berechnet, hierbei spricht man auch von POS-Monogrammen. Analysen von A. Cimoni ergaben, dass sich die Verwendung von Bigrammen der POS-Tags im Vergleich zu Monogrammen nicht signifikant auf die Genauigkeit der Klassifizierung auswirkt \cite{cimino2017identifying}, daher wurde diese Möglichkeit in dieser Arbeit ebenfalls nicht weiter erforscht. Es ist wichtig zu erwähnen, dass die Frequenzen der einzelnen Wortarten für jeden Artikel teilweise nur sehr gering sind. Auch hier erhöht sich die Aussagekraft der Frequenzen als Features zudem mit der Länge des Artikels.
+
+Die lexikalische Dichte eines Textes ist sein Verhältnis von Autosemantika bzw. Inhaltswörtern zu der Gesamtzahl an Wörtern. Eine höhere lexikalische Dichte bedeutet, dass der Text die enthaltenen Informationen präziser und verständlicher wiedergibt. Für die Berechnung des Anteils der Autosemantika ist das POS-Tagging die Grundlage, da in der deutschen Sprache die Wortart bestimmt, ob ein Wort eine eigene lexikalische Bedeutung besitzt. Diese Wortarten sind Substantive, Verben, Adjektive und Adverbien.
+
+Weiterhin werden die Monogramme der beim Dependency Parsing berechneten Dependency Relations als Features verwendet, indem die jeweiligen Frequenzen pro Artikel bestimmt werden. Auch hier ist es möglich Bigramme zu berechnen, allerdings würde das die Dimensionalität der Featurevektoren beträchtlich erhöhen und die Frequenzen verringern. Damit spiele die Länge der Texte eine noch größere Rolle.
+
+\subsection{Featureset}
+In dieser Arbeit werden insgesamt 201 Features verwendet und untersucht. Im Folgenden wird ein Überblick über das Featureset gegeben:
+
+\begin{tabular}{rl}
+  1. & Durchschnittliche Satzlänge\\
+  2. & Flesch-Grad\\
+  3. & Type-Token-Relation\\
+  4. & Lexikalische Dichte\\
+  5-59. & Frequenzen der Monogramme aller Wortarten (POS-Tags)\\
+  60-101. & Frequenzen der Monogramme aller Dependency Relations\\
+  102-201. & Frequenzen der 100 häufigsten Lemmata des Korpus
+\end{tabular}
+
+
 
 \chapter{Datenauswertung}
 Wie können die Daten überhaupt ausgewertet werden? Es müssen gleichzeitig die Performance der Features, als auch des Algorithmus zur Klassifizierung analysiert und ausgewertet werden.
