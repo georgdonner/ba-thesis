@@ -94,6 +94,8 @@ Falls es nur zwei mögliche Klassen gibt, handelt es sich um eine \emph{Binärer
 
 Klassifizierung ist ein häufiges Problem, für das es aufgrund der vielen Anwendungsbereiche und damit völlig unterschiedlichen Anforderungen keinen besten Algorithmus zur Bestimmung der Klasse bzw. der Wahrscheinlichkeit gibt. Die meisten dieser Algorithmen erstellen eine lineare Funktion, in die der Featurevektor anschließend eingesetzt wird. Jedes Feature bekommt hierbei eine eigene Gewichtung, die sich aus dem vorherigen Training ergibt. Dieses Training unterscheidet sich je nach Algorithmus und auch der zurückgegebene Score wird je nach Algorithmus unterschiedlich interpretiert.
 
+\todo{Statistik? Korrelationskoeffizient z.B.}
+
 \chapter{Datenverarbeitung}
 Die Grundlage dieser Arbeit bildet ein großer Datensatz mit Artikeln verschiedener Online-Zeitungen. Damit diese Artikel verglichen werden können oder eine Klassifizierung durchgeführt werden kann, müssen diese zunächst jeweils in einen Featurevektor umgewandelt werden. Dieses Kapitel beschreibt die verwendeten Tools und nötigen Schritte um dieses Ziel zu erreichen.
 
@@ -159,7 +161,7 @@ Im zweiten Ansatz wurde mehr Wert auf die Zuverlässigkeit der Ergebnisse statt 
 
 \todo{Überblick spaCy Geschwindigkeit und Optimierungen}
 
-Die Anzahl der analysierten Artikel wurde zunächst beschränkt, um die Größe der Dateien, welche die Ergebnisse der Textverarbeitung beinhalten, gering zu halten. Für 43000 Artikel werden hier etwa 3,4 GB benötigt, indem nur die für diese Arbeit relevanten linguistischen Merkmale der Token gespeichert werden. Dies ermöglicht einen schnellen, iterativen Prozess für die Generierung, Auswahl und Bewertung der in Kapitel \ref{features} beschriebenen Features.
+Die Anzahl der analysierten Artikel wurde zunächst beschränkt, um die Größe der Dateien, welche die Ergebnisse der Textverarbeitung beinhalten, gering zu halten. Für 43000 Artikel werden hier etwa 3,4 GB benötigt, indem nur die für diese Arbeit relevanten linguistischen Merkmale der Token gespeichert werden. Dies ermöglicht einen schnellen, iterativen Prozess für die Generierung, Auswahl und Bewertung der in Kapitel \ref{features} beschriebenen Features. Nachdem das Featureset feststand, wurde die Anzahl der Artikel pro Zeitung pro Thema auf 25000 erhöht, falls so viele zur Verfügung standen, da vermutet wird, dass eine Erhöhung der Anzahl an analysierten Artikel sich positiv auf die Genauigkeit der Klassifizierung und des Clustering auswirkt. Hierfür mussten die Ergebnisse der spaCy Pipeline nicht mehr zwischengespeichert werden, sondern konnten direkt für die Berechnung der Features weiterverwendet werden.
 
 Nach der Analyse der Texte wurde eine weitere Filterung der Artikel vorgenommen, um den Anteil fehlerhafter Daten zu reduzieren. Es wurden hierfür jegliche Sätze mit weniger als vier Wörtern entfernt. Diese rigorose Filterung war notwendig da viele Artikel Wörter beinhalten, die nicht zum eigentlichen Inhalt gehören. Beispiele dafür sind Kürzel der Nachrichtenagentur, der Ort, der Autor, Quellen oder Verweise am Anfang oder Ende des Artikels.
 
@@ -180,6 +182,8 @@ Weiterhin existieren diverse Indizes, welche versuchen, die Lesbarkeit auf einer
 $ S $ ist die Gesamtzahl der Silben\\
 $ W $ ist die Gesamtzahl der Wörter\\
 $ T $ ist die Gesamtzahl der Sätze
+
+\todo{Tabelle für die Beurteilung des Flesch-Grades}
 
 In dieser Arbeit soll überprüft werden, ob die Lesbarkeit eines Artikels zur Erkennung der Zeitung beiträgt und wird daher zunächst in das verwendete Featureset aufgenommen und später genauer analysiert.
 
@@ -216,9 +220,37 @@ In dieser Arbeit werden insgesamt 201 Features verwendet und untersucht. Im Folg
 \end{tabular}
 
 \chapter{Datenauswertung}
-Wie können die Daten überhaupt ausgewertet werden? Es müssen gleichzeitig die Performance der Features, als auch des Algorithmus zur Klassifizierung analysiert und ausgewertet werden.
+Das Ziel dieser Arbeit ist es, zu untersuchen, inwiefern die Zeitungen gruppiert werden können. Der Vergleich der Zeitungen erfolgt dabei anhand des ausgewählten Featuresets. Bevor jedoch ein Clustering bzw. eine Gruppierung der Artikel oder Zeitungen durchgeführt werden kann, ist es notwendig, zunächst die Performanz der Features zu überprüfen. Hierbei wird untersucht, inwiefern die Features ausreichend sind, um Zeitungen voneinander zu unterscheiden. Um dies auswerten zu können, wird eine Klassifizierung der Zeitungen durchgeführt und die Ergebnisse mit verschiedenen Methoden ausgewertet. Für das Clustering wird zunächst überprüft, ob Cluster entstehen, wenn jeder Artikel jeder Zeitung als eigener Wert verwendet wird. Weiterhin werden die Durchschnitte der Zeitungen berechnet und anschließend für das Clustering verwendet. Sowohl die Klassifizierung als auch das Clustering wird für jedes Thema durchgeführt, folglich werden jeweils nur Artikel des jeweiligen Themas zur Analyse verwendet. Dadurch wird festgestellt, ob die Performanz des Featuresets je nach Thema unterschiedlich ausfällt und welche Features jeweils besser geeignet sind.
+
 \section{Überblick}
-Ein paar Plots zeigen, die die Korrelation ausgewählter Features zeigen?
+Um einen Überblick über die Verteilung der Artikel zu bekommen, werden zunächst einige ausgewählte Features auf ihre Verteilung und mögliche Korrelationen überprüft. Dafür bieten sich die Features 1. bis 4. an, da sie unabhängig von anderen Features bereits einige Aussagekraft besitzen und ihre Werte am besten interpretiert werden können.
+
+\begin{table}
+\centering
+\begin{tabular}[t]{lrrrr}
+\toprule
+~ & Satzlänge & Flesch-Grad & Type-Token-Relation & Lexikalische Dichte\\
+\midrule
+Satzlänge & 1,00 & -0,39 & -0,01 & -0,03\\
+Flesch-Grad & -0,39 & 1,00 & -0,25 & -0,30\\
+Type-Token-Relation & -0,01 & -0,25 & 1,00 & 0,29\\
+Lexikalische Dichte & -0,03 & -0,30 & 0,29 & 1,00\\
+\bottomrule
+\end{tabular}
+\caption{Pearson-Korrelation der Features 1. bis 4.}
+\label{correlation}
+\end{table}
+
+\bild{sent_length_readability}{\textwidth}{Korrelation der durchschnittlichen Satzlänge und dem Flesch-Grad}{Korrelation der durchschnittlichen Satzlänge und dem Flesch-Grad}
+
+Die Tabelle \ref{correlation} zeigt bereits, dass die Variablen untereinander nicht alle unabhängig sind. Dennoch sind die Pearson-Korrelationskoeffizienten nicht besonders hoch und signalisieren damit einen schwachen Zusammenhang zwischen den Variablen. Da die durchschnittliche Satzlänge Teil der Formel für den Flesch-Grad ist, ist die Abhängigkeit hier besonders offensichtlich. Diese Abhängigkeit hat den höchsten Koeffizient mit -0,4, die Artikel werden hier jedoch trotzdem weit verteilt liegen. Dies wird durch Abbildung \ref{img.sent_length_readability} sehr gut verdeutlicht. Hier ist jeder der ingesamt 865797 analysierten Artikel in das Diagramm eingezeichnet, jeder Artikel hat dabei einen Alphawert von 0,005, welcher die Durchsichtigkeit eines Punktes angibt. Durch die tiefblauen Punkte wird ebenfalls erkenntlich, dass sich doppelte Artikel im Datensatz befinden müssen.
+
+\bild{lexical_density_readability}{\textwidth}{Korrelation der lexikalischen Dichte und dem Flesch-Grad und Durchschnitte der Zeitungen für alle Politik-Artikel}{Korrelation der lexikalischen Dichte und dem Flesch-Grad}
+
+In Abbildung \ref{img.lexical_density_readability} wurden nur die Artikel mit dem Thema Politik berücksichtigt und erneut jeder Artikel mit dem gleichen Alphawert wie in Abbildung \ref{img.sent_length_readability} eingezeichnet. Die schwarzen Kreuze im Diagramm symbolisieren jeweils den Durchschnitt der Zeitungen. Es ist bereits deutlich erkennbar, dass die Durchschnitte der Variablen pro Zeitung sich nicht sehr voneinander unterscheiden. Lediglich eine Zeitung, die Ärzte-Zeitung, weist einen sichtbar anderen Durchschnittswert für den Flesch-Grad auf, der jedoch in Anbetracht der weiten Verteilung der Daten auch für diese Zeitung bei Weitem kein zuverlässiges Unterscheidungsmerkmal ist.
+
+Aus diesen Erkenntnissen lässt sich bereits vermuten, dass die Klassifizierung und das Clustering der Artikel auf Basis dieser Features nicht erfolgreich sein wird. Daher ist es unbedingt notwendig, weitere Features zu verwenden, um die Artikel gruppieren zu können. Da dies jedoch mithilfe von Diagrammen nicht möglich ist, werden die Features im folgenden Kapitel mittels Klassifizierung auf ihre Performanz überprüft.
+
 \section{Klassifizierung}
 Warum versuche ich die Klassifizierung? Weil wenn Klassifizierung nicht wirklich funktioniert und kein Model trainiert werden kann, welches die Zeitung auf Basis der Daten predicten kann, dann ist auch keine Gruppierung möglich.
 
