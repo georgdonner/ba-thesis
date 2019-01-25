@@ -175,7 +175,7 @@ Es gibt eine Vielzahl an Features, die für einen Text generiert bzw. ausgewähl
 \subsection{Lexikalisch}
 Für die Bestimmung lexikalischer Features ist lediglich die Tokenisierung eines Textes notwendig und erfordert somit einen vergleichsweise geringen Aufwand. Die einfachsten Merkmale sind hierbei die durchschnittliche Satz- oder Wortlänge und werden schon seit den Anfängen der Forschung im Bereich der Erkennung der Autorschaft oder des Genres eines Textes verwendet \cite[S.~473]{stamatatos2000automatic}. Obwohl sie nicht besonders allgemeingültig sind, spielen diese Merkmale doch immer noch eine Schlüsselrolle in der Unterscheidung von Textgenres \cite{cimino2017identifying} und sind daher auch in dieser Arbeit Teil des Featuresets.
 
-Weiterhin existieren diverse Indizes, welche versuchen, die Lesbarkeit auf einer Skala von 0 (einfach) bis 100 (schwer) zu ermitteln oder dem Text eine Schulstufe zuzuordnen, die abgeschlossen sein muss, um den Text verstehen zu können. Diese berechnen sich meist aus einer Kombination der Anzahl an Silben, Wörtern und Sätzen im Text. Einer der ältesten und populärsten Indizes ist der 1948 veröffentlichte Flesch-Grad \cite{mccallum1982computer}. Dieser wurde zwar ursprünglich für die englische Sprache entwickelt und ist damit nicht besonders gut geeignet für den in dieser Arbeit verwendeten Korpus, aber Toni Amstad konnte den Flesch-Grad später auf die deutsche Sprache übertragen \cite{amstad1978verstandlich}. Dieser berechnet sich wie folgt:
+Weiterhin existieren diverse Indizes, welche versuchen, die Lesbarkeit auf einer Skala von 0 (schwer) bis 100 (einfach) zu ermitteln oder dem Text eine Schulstufe zuzuordnen, die abgeschlossen sein muss, um den Text verstehen zu können. Diese berechnen sich meist aus einer Kombination der Anzahl an Silben, Wörtern und Sätzen im Text. Einer der ältesten und populärsten Indizes ist der 1948 veröffentlichte Flesch-Grad \cite{mccallum1982computer}. Dieser wurde zwar ursprünglich für die englische Sprache entwickelt und ist damit nicht besonders gut geeignet für den in dieser Arbeit verwendeten Korpus, aber Toni Amstad konnte den Flesch-Grad später auf die deutsche Sprache übertragen \cite[K.~9]{rottensteiner2010structure}. Dieser berechnet sich wie folgt:
 
 \(FG = 180 - \frac{W}{T} - (58,5 \cdot \frac{S}{W})\)
 
@@ -183,7 +183,26 @@ $ S $ ist die Gesamtzahl der Silben\\
 $ W $ ist die Gesamtzahl der Wörter\\
 $ T $ ist die Gesamtzahl der Sätze
 
-\todo{Tabelle für die Beurteilung des Flesch-Grades}
+Tabelle \ref{fleschgrad} zeigt, wie die Ergebnisse der Berechnung interpretiert werden sollen.
+
+\begin{table}[h]
+\centering
+\begin{tabular}[t]{lll}
+\toprule
+Flesch-Grad & Lesbarkeit & Bildungsstand\\
+\midrule
+0-30 & Sehr schwer & Studium abgeschlossen\\
+30-50 & Schwer & Studierend\\
+50-60 & Mittelschwer & 10. - 12. Klasse\\
+60-70 & Standard & 8. - 9. Klasse\\
+70-80 & Mitteleinfach & 7. Klasse\\
+80-90 & Einfach & 6. Klasse\\
+90-100 & Sehr einfach & 5. Klasse\\
+\bottomrule
+\end{tabular}
+\caption{Flesch-Grad Bewertungen und äquivalenter Bildungsstand \cite[S.~406]{courtis2002reading}}
+\label{fleschgrad}
+\end{table}
 
 In dieser Arbeit soll überprüft werden, ob die Lesbarkeit eines Artikels zur Erkennung der Zeitung beiträgt und wird daher zunächst in das verwendete Featureset aufgenommen und später genauer analysiert.
 
