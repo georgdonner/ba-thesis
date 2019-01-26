@@ -287,11 +287,35 @@ Für das Training werden 70\% der Daten verwendet und die restlichen 30\% ergebe
 Weiterhin werden vor der Klassifizierung Artikel herausgefiltert, welche fehlerhafte Daten besitzen, wie z.B. einen negativen Flesch-Grad. Aufgrund der Abhängigkeit vieler Features von der Länge des Textes, wurden zudem nur Artikel mit mehr als 100 Wörtern für die Analyse berücksichtigt.
 
 \subsection{Feature Selection}
-Welche Verfahren wurden zur Feature Selection verwendet? Warum? Warum war das überhaupt nötig. Vergleich zu bzw. Verweis auf bisherige(n) Studien zur Feature Selection zur Genre/Author detection.
+Zunächst werden nur Features für die Klassifizierung verwendet, welche nach der Standardisierung eine Varianz von Eins besitzen. Dies kann nur vorkommen, wenn alle Artikel für das Feature den gleichen Wert haben.
 
-(evtl. welche Features sind pro Zeitung relevant gewesen? weil unterschiedliche thetas pro Kategorie bei One vs Rest Klassifizierung)
+Um den Einfluss der verschiedenen Gruppen an Features auf die Genauigkeit der Klassifizierung zu untersuchen, werden zudem sieben Featuresets getestet. Diese werden im Folgenden vorgestellt und mit einem Label versehen, dabei gibt N die Größe des Featuresets \emph{nach} der Aussortierung von Features mit einer Varianz von weniger als Eins an.
+
+\begin{tabular}{llr}
+  \emph{pos} & Features 4.-59. & N=55\\
+  \emph{dep} & Features 60.-101. & N=42\\
+  \emph{lemma} & Features 102.-201. & N=97\\
+  \emph{-pos} & Alle Features außer \emph{pos} & N=55\\
+  \emph{-dep} & Alle Features außer \emph{dep}& N=55\\
+  \emph{-lemma} & Alle Features außer \emph{lemma} & N=55\\
+  \emph{alle} & Alle Features & N=55\\
+\end{tabular}
+\todo{restliche N ergänzen}
+
+% Welche Verfahren wurden zur Feature Selection verwendet? Warum? Warum war das überhaupt nötig. Vergleich zu bzw. Verweis auf bisherige(n) Studien zur Feature Selection zur Genre/Author detection.
+
+\subsection{Verfahren}
+Bevor eine Klassifizierung durchgeführt werden kann, muss zunächst erarbeitet werden, welche Verfahren dafür verwendet werden sollen. Da Featuresets für die Erkennung der Autorschaft üblicherweise aus tausenden Features besteht, werden hierfür Algorithmen eingesetzt, welche mit diesen hochdimensionalen Daten in einer annehmbaren Laufzeit gute Ergebnisse erzielen. Dabei muss so gut wie möglich vermieden werden, sich zu sehr an die Trainingsdaten anzupassen, auch Overfitting genannt. Es zeigte sich, dass Support Vector Machine (SVM) hierfür eine der besten Methoden ist \cite{li2006fingerprint, stamatatos2009survey}.
+
+In dieser Arbeit wird die Klassifizierung jedoch primär für die Beurteilung der Features verwendet und somit ist es eine Voraussetzung, dass die Gewichtungen der Features gut interpretiert werden können. Dafür eignen sich lineare Klassifikatoren, da sie den Score einer Klasse berechnen, indem das Skalarprodukt aus einem Vektor mit Gewichtungen und dem Featurevektor gebildet wird. Je nach Verfahren gibt der Vektor der Gewichtungen anschließend Aufschluss darüber, welches Feature wie stark zu der Entscheidung beiträgt. Dafür eignet sich eine Maximum-Entropie-Methode \cite[K.~2]{cimino2017identifying}. Ein weiterer Vorteil linearer Klassifikatoren ist, dass diese weniger rechenintensiv sind und somit auch für zehntausende Stichproben eine vergleichsweise kurze Laufzeit haben. Die Komplexität der SVM skaliert quadratisch mit dem Stichprobenumfang, sodass solch eine Datenmenge selbst für nur einen Durchlauf schwer zu verarbeiten ist \cite[Seite: sklearn.svm.SVC]{scikitlearnAPIReference}.
+
+Des Weiteren liefert die Genauigkeit der Klassifizierung Erkenntnisse darüber, wie gut sich die Artikel voneinander unterscheiden lassen. Daraus kann bereits abgeleitet werden, inwiefern eine anschließende sinnvolle Gruppierung der Artikel überhaupt möglich ist.
+
+In dieser Arbeit wird multinomiale logistische Regression, auch Maximum-Entropie-Klassifikator genannt, als Verfahren für die Klassifizierung verwendet. Der größte Vorteil hierbei ist die gute Interpretationsmöglichkeit der Gewichtungen. Je höher der Betrag einer Gewichtung ist, umso entscheidender ist die Rolle, die sie bei der Berechnung des Scores einer Klasse spielt. Als linearer Klassifikator ist er zudem auch für den hohen Stichprobenumfang von etwa 100000 Artikeln pro Thema immer noch gut geeignet.
+% Ein weiteres Verfahren, welches für die Beurteilung der Genauigkeit einer Klassifizierung in dieser Arbeit eingesetzt und untersucht wird, ist die Support Vector Machine mit einem linearen Kernel.
+
 \subsection{Messung der Performance}
-Welche verschiedenen Ansätze gibt es hier?
+% Für die Evaluierung der Ergebnisse einer Klassifizierung gibt es verschiedene Metriken. In dieser Arbeit wird für jede Klasse das F-Maß berechnet und eine Wahrheitsmatrix generiert und anschließend ausgewertet.
 \subsubsection*{F-Maß}
 \subsubsection*{Wahrheitsmatrix}
 \subsubsection*{Beurteilung der Wahrscheinlichkeiten}
