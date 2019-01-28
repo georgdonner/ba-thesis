@@ -94,6 +94,17 @@ Falls es nur zwei mögliche Klassen gibt, handelt es sich um \emph{Binäre Klass
 
 Klassifizierung ist ein häufiges Problem, für das es aufgrund der vielen Anwendungsbereiche und damit völlig unterschiedlichen Anforderungen keinen besten Algorithmus zur Bestimmung der Klasse bzw. der Wahrscheinlichkeit gibt. Die meisten dieser Algorithmen erstellen eine lineare Funktion, in die der Featurevektor anschließend eingesetzt wird. Jedes Feature bekommt hierbei eine eigene Gewichtung, die sich aus dem vorherigen Training ergibt. Dieses Training unterscheidet sich je nach Algorithmus und auch der zurückgegebene Score wird je nach Algorithmus unterschiedlich interpretiert.
 
+\subsection{Logistische Regression}
+Einer dieser Algorithmen ist die logistische Regression, welche in ihrer klassischen Form eine binäre Entscheidung darüber trifft, welche Klasse einer neuen Beobachtung zugeordnet wird. Dies wird erreicht, indem aus einem Trainingsset ein Vektor mit Gewichten für jedes Feature und ein Bias gelernt werden. Jedes Gewicht \textit{w\textsubscript{i}} steht dafür, wie wichtig das Feature \textit{x\textsubscript{i}} des Inputs für die Klassifizierung ist. Je höher der Betrag des Gewichtes ist, umso entscheidender ist es für die Klassifizierung. Die Wahrscheinlichkeit \textit{\^{y}} für eine Klasse wird berechnet, indem das Skalarprodukt des Featurevektors \textit{x} und des Vektors der Gewichte \textit{w} zum Bias \textit{b} addiert und anschließend in die Sigmoidfunktion eingesetzt wird, welche die Werte in den Wertebereich 0 - 1 skaliert: 
+\[ \hat{y} = \frac{1}{1 + e^{-w \cdot x + b}} \]
+Die Gewichte und der Bias werden optimiert, indem iterativ für jede Beobachtung im Trainingsset die vorhergesagte Wahrscheinlichkeit \textit{\^{y}} mit der wirklichen Klasse \textit{y} verglichen wird. Bei der logistischen Regression soll hierfür die Wahrscheinlichkeit der korrekten Klasse maximiert werden. Da es nur zwei mögliche Ergebnisse gibt, ergibt sich daraus folgende Berechnung der Wahrscheinlichkeit, welche maximiert wird:
+\[ p(y|x) = \hat{y}^y (1-\hat{y})^{1-y} \]
+Dies wird anschließend logarithmiert und das Vorzeichen umgekehrt, um eine Kostenfunktion zu bekommen, die minimiert werden soll. Das Ergebnis ist der Kreuzentropie-Verlust \textit{L\textsubscript{CE}}:
+\[ L_{CE}(\hat{y},y) = -\log{p(y|x)} \]
+Dieses Optimierungsproblem wird dann mit dem Gradientenverfahren gelöst. Dabei wird die Richtung des steilsten Anstiegs der aktuellen Position entlang der \textit{N} Dimensionen annähernd bestimmt und anschließend die Gewichte und den Bias in die entgegengesetzte Richtung verändert. Da die Kostenfunktion konvex ist, ist das Finden des Minimums garantiert.
+
+Mit der multinomialen logistischen Regression können auch Wahrscheinlichkeiten für mehr als nur zwei Klassen berechnet werden. Hierbei gibt es für jede Klasse je einen Vektor mit Gewichten und die Werte werden hier mit der Softmax-Funktion in den Wertebereich 0 - 1 skaliert. Daher muss für die Optimierung auch eine etwas modifizierte Kostenfunktion verwendet werden. Die Gewichte zeigen anschließend pro Klasse, welche Features für die Entscheidung am ausschlaggebendsten waren, bei einem positiven Wert dafür und bei einem negativen Wert dagegen.
+
 \todo{Statistik? Korrelationskoeffizient z.B.}
 
 \chapter{Datenverarbeitung}
@@ -177,7 +188,7 @@ Für die Bestimmung lexikalischer Features ist lediglich die Tokenisierung eines
 
 Weiterhin existieren diverse Indizes, welche versuchen, die Lesbarkeit auf einer Skala von 0 (schwer) bis 100 (einfach) zu ermitteln oder dem Text eine Schulstufe zuzuordnen, die abgeschlossen sein muss, um den Text verstehen zu können. Diese berechnen sich meist aus einer Kombination der Anzahl an Silben, Wörtern und Sätzen im Text. Einer der ältesten und populärsten Indizes ist der 1948 veröffentlichte Flesch-Grad \cite{mccallum1982computer}. Dieser wurde zwar ursprünglich für die englische Sprache entwickelt und ist damit nicht besonders gut geeignet für den in dieser Arbeit verwendeten Korpus, aber Toni Amstad konnte den Flesch-Grad später auf die deutsche Sprache übertragen \cite[K.~9]{rottensteiner2010structure}. Dieser berechnet sich wie folgt:
 
-\(FG = 180 - \frac{W}{T} - (58,5 \cdot \frac{S}{W})\)
+\[ FG = 180 - \frac{W}{T} - (58,5 \cdot \frac{S}{W}) \]
 
 $ S $ ist die Gesamtzahl der Silben\\
 $ W $ ist die Gesamtzahl der Wörter\\
