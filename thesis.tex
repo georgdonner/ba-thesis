@@ -31,6 +31,7 @@ Matrikel-Nummer 553821\\
 
 \tableofcontents % erstelle hier das Inhaltsverzeichnis
 \listoffigures % erstelle hier das Abbildungsverzeichnis
+\listoftables % Tabellenverzeichnis
 \clearpage
 
 % richtiger Inhalt
@@ -136,6 +137,7 @@ Der in dieser Arbeit verwendete Datensatz wurde von Ole Wendt erstellt und enth�
 
 \begin{table}[h]
 \centering
+\begin{spacing}{1.25}
 \begin{tabular}[t]{lr}
 \toprule
 Zeitung & Anzahl der Artikel \\
@@ -153,6 +155,7 @@ Zeit Online & 2242198 \\
 \end{tabular}
 \caption{Größe des Datensatzes}
 \label{data}
+\end{spacing}
 \end{table}
 
 Die für diese Arbeit relevanten Datenfelder eines Artikels sind \texttt{content}, \texttt{url} und \texttt{date}, welche jeweils in Textform gespeichert sind. Es existieren weitere interessante Felder für z.B. den Autor oder die Zusammenfassung eines Artikels. Ein genauerer Blick in den Datensatz ergibt jedoch, dass diese bei dem Großteil der Einträge fehlen und somit nicht für die Analyse genutzt werden können.
@@ -203,6 +206,7 @@ Tabelle \ref{fleschgrad} zeigt, wie die Ergebnisse der Berechnung interpretiert 
 
 \begin{table}[h]
 \centering
+\begin{spacing}{1.25}
 \begin{tabular}[t]{lll}
 \toprule
 Flesch-Grad & Lesbarkeit & Bildungsstand\\
@@ -218,6 +222,7 @@ Flesch-Grad & Lesbarkeit & Bildungsstand\\
 \end{tabular}
 \caption{Flesch-Grad Bewertungen und äquivalenter Bildungsstand \cite[S.~406]{courtis2002reading}}
 \label{fleschgrad}
+\end{spacing}
 \end{table}
 
 In dieser Arbeit soll überprüft werden, ob die Lesbarkeit eines Artikels zur Erkennung der Zeitung beiträgt und wird daher zunächst in das verwendete Featureset aufgenommen und später genauer analysiert.
@@ -262,7 +267,8 @@ Um einen Überblick über die Verteilung der Artikel zu bekommen, werden zunäch
 
 \begin{table}
 \centering
-\begin{tabular}[t]{lrrrr}
+\begin{spacing}{1.25}
+\begin{tabular}[t]{lcccc}
 \toprule
 ~ & Satzlänge & Flesch-Grad & Type-Token-Relation & Lexikalische Dichte\\
 \midrule
@@ -274,6 +280,7 @@ Lexikalische Dichte & -0,03 & -0,30 & 0,29 & 1,00\\
 \end{tabular}
 \caption{Pearson-Korrelation der Features 1. bis 4.}
 \label{correlation}
+\end{spacing}
 \end{table}
 
 \bild{sent_length_readability}{\textwidth}{Korrelation der durchschnittlichen Satzlänge und dem Flesch-Grad}{Korrelation der durchschnittlichen Satzlänge und dem Flesch-Grad}
@@ -298,7 +305,7 @@ Die Features 1. bis 4. haben im Vergleich zu den restlichen, auf Frequenzen beru
 \(Z = \frac{X-\mu}{\sigma}\)
 \todo{Genauer erklären, was die Formel bedeutet, aber wie?}
 
-Für das Training werden 70\% der Daten verwendet und die restlichen 30\% ergeben das Testset, welches für die Evaluierung des Klassifikators verwendet wird. Da nicht für jede Zeitung bei jedem Thema die gleiche Anzahl an Artikeln für die Klassifizierung zur Verfügung steht, wird zudem untersucht, ob sich Undersampling hier positiv auf das Ergebnis auswirkt. Undersampling ist der Prozess, die Anzahl der Daten jeder Klasse auf die Anzahl der am geringsten repräsentierten Klasse zu reduzieren. Dies resultiert in einem ausgeglichenen Datenset, welches je nach verwendetem Algorithmus zu zuverlässigen Ergebnissen führen kann.
+Für das Training werden 70\% der Daten verwendet und die restlichen 30\% ergeben das Testset, welches für die Evaluierung des Klassifikators verwendet wird. Da nicht für jede Zeitung bei jedem Thema die gleiche Anzahl an Artikeln für die Klassifizierung zur Verfügung steht, wird zudem untersucht, ob sich Undersampling hier positiv auf das Ergebnis auswirkt. Undersampling ist der Prozess, die Anzahl der Daten jeder Klasse auf die Anzahl der am geringsten repräsentierten Klasse zu reduzieren. Dies resultiert in einem ausgeglichenen Datenset, welches je nach verwendetem Algorithmus zu zuverlässigeren Ergebnissen führen kann.
 
 Weiterhin werden vor der Klassifizierung Artikel herausgefiltert, welche fehlerhafte Daten besitzen, wie z.B. einen negativen Flesch-Grad. Aufgrund der Abhängigkeit vieler Features von der Länge des Textes, wurden zudem nur Artikel mit mehr als 100 Wörtern für die Analyse berücksichtigt.
 
@@ -323,7 +330,7 @@ Um den Einfluss der verschiedenen Gruppen an Features auf die Genauigkeit der Kl
 \subsection{Verfahren}
 Bevor eine Klassifizierung durchgeführt werden kann, muss zunächst erarbeitet werden, welche Verfahren dafür verwendet werden sollen. Da Featuresets für die Erkennung der Autorschaft üblicherweise aus tausenden Features besteht, werden hierfür Algorithmen eingesetzt, welche mit diesen hochdimensionalen Daten in einer annehmbaren Laufzeit gute Ergebnisse erzielen. Dabei muss so gut wie möglich vermieden werden, sich zu sehr an die Trainingsdaten anzupassen, auch Overfitting genannt. Es zeigte sich, dass Support Vector Machine (SVM) hierfür eine der besten Methoden ist \cite{li2006fingerprint, stamatatos2009survey}.
 
-In dieser Arbeit wird die Klassifizierung jedoch primär für die Beurteilung der Features verwendet und somit ist es eine Voraussetzung, dass die Gewichtungen der Features gut interpretiert werden können. Dafür eignen sich lineare Klassifikatoren, da sie den Score einer Klasse berechnen, indem das Skalarprodukt aus einem Vektor mit Gewichtungen und dem Featurevektor gebildet wird. Je nach Verfahren gibt der Vektor der Gewichtungen anschließend Aufschluss darüber, welches Feature wie stark zu der Entscheidung beiträgt. Dafür eignet sich eine Maximum-Entropie-Methode \cite[K.~2]{cimino2017identifying}. Ein weiterer Vorteil linearer Klassifikatoren ist, dass diese weniger rechenintensiv sind und somit auch für zehntausende Stichproben eine vergleichsweise kurze Laufzeit haben. Die Komplexität der nicht-linearen SVM skaliert quadratisch mit dem Stichprobenumfang, sodass solch eine Datenmenge selbst für nur einen Durchlauf schwer zu verarbeiten ist \cite[Seite: sklearn.svm.SVC]{scikitlearnAPIReference}.
+In dieser Arbeit wird die Klassifizierung jedoch primär für die Beurteilung der Features verwendet und somit ist es eine Voraussetzung, dass die Gewichtungen der Features gut interpretiert werden können. Dafür eignen sich lineare Klassifikatoren, da sie den Score einer Klasse berechnen, indem das Skalarprodukt aus einem Vektor mit Gewichtungen und dem Featurevektor gebildet wird. Je nach Verfahren gibt der Vektor der Gewichtungen anschließend Aufschluss darüber, welches Feature wie stark zu der Entscheidung beiträgt. Dafür eignet sich eine Maximum-Entropie-Methode \cite[K.~2]{cimino2017identifying}. Ein weiterer Vorteil linearer Klassifikatoren ist, dass diese weniger rechenintensiv sind und somit auch für zehntausende Stichproben eine vergleichsweise kurze Laufzeit haben. Die Komplexität der nicht-linearen SVM skaliert mehr als quadratisch mit dem Stichprobenumfang, sodass solch eine Datenmenge selbst für nur einen Durchlauf schwer zu verarbeiten ist \cite[Seite: sklearn.svm.SVC]{scikitlearnAPIReference}.
 
 Des Weiteren liefert die Genauigkeit der Klassifizierung Erkenntnisse darüber, wie gut sich die Artikel voneinander unterscheiden lassen. Daraus kann bereits abgeleitet werden, inwiefern eine anschließende sinnvolle Gruppierung der Artikel überhaupt möglich ist.
 
@@ -331,26 +338,100 @@ In dieser Arbeit wird multinomiale logistische Regression, auch Maximum-Entropie
 
 \subsection{Messung der Performance}
 Für die Evaluierung der Ergebnisse einer Klassifizierung gibt es diverse Metriken. Besonders bei einer Klassifizierung mit mehr als zwei Klassen, ist es wichtig, die Performance pro Klasse beurteilen zu können. Dafür ist es notwendig, dass mehr als nur der Anzahl an korrekt klassifizierten Beobachtungen, sondern auch auch die \textit{false positives} mit in die Metrik einfließen. Einen guten Überblick gibt hier die Wahrheitsmatrix, welches, wie in Tabelle \ref{confusion_matrix} zu sehen, zeilenweise die vorhergesagten Klassen und spaltenweise die wirkliche Klasse zeigt. Für den Spiegel ergibt sich hier eine gute Trefferquote (recall) von 0,9, die Genauigkeit (precision) ist mit rund 0,64 jedoch vergleichsweise schlecht. Das F-Maß kombiniert diese beiden Metriken, um dieses Verhältnis mit nur einem Maß aussagekräftig beurteilen zu können:
-\[ F = \frac{2 \cdot precision \cdot recall}{precision + recall} \]
-In diesem Beispiel hat der Spiegel folglich ein F-Maß von rund 0,75.
+\[ F = \frac{2 \cdot (precision \cdot recall)}{precision + recall} \]
+In diesem Beispiel hat der Spiegel folglich ein F-Maß von rund 0,75. Für die Beurteilung der Zuverlässigkeit des gesamten Klassifikators, gibt es verschiedene Ansätze um das F-Maß dennoch einsetzen zu können. Es können einerseits alle einzelnen Klassifizierungen für die Berechnung des F-Maßes verwendet werden (\textit{micro}), sodass eine ungleiche Verteilung der Klassen das Ergebnis nicht verzerrt. Es ist jedoch auch möglich, den Durchschnitt der F-Maße der einzelnen Klassen zu berechnen (\textit{macro}).
 
 \begin{table}
 \centering
+\begin{spacing}{1.25}
 \begin{tabular}[t]{lrccc}
 \toprule
 ~ & ~ & \multicolumn{3}{c}{wirkliche Klasse}\\
 \midrule
 ~ & ~ & Spiegel & Welt & Zeit\\
-\multirow{3}{*}{vorhergesagte Klasse} & Spiegel & 9 & 3 & 2\\
-& Welt & 1 & 7 & 0\\
-& Zeit & 0 & 0 & 8\\
+\multirow{3}{*}{vorhergesagte Klasse} & Spiegel & 9 & 5 & 2\\
+& Welt & 1 & 12 & 0\\
+& Zeit & 0 & 1 & 5\\
 \bottomrule
 \end{tabular}
 \caption{Beispiel einer Wahrheitsmatrix}
 \label{confusion_matrix}
+\end{spacing}
 \end{table}
 
 \subsection{Ergebnisse}
+Zunächst wird die Auswirkung des Stichprobenumfangs auf die Zuverlässigkeit der Klassifizierung untersucht. Hierfür wird das Thema \emph{Politik} verwendet, da 8 der 9 Zeitungen Artikel zu diesem Thema verfasst haben und die Menge der zur Verfügung stehenden Artikel hier am größten ist. Für jeden ausgewählten Stichprobenumfang werden 10 Durchläufe ausgeführt und anschließend sowohl das durchschnittliche als auch das beste \textit{micro} F-Maß als Metrik für die Zuverlässigkeit verwendet. Für die Klassifizierung wird ausschließlich logistische Regression verwendet, da die Laufzeiten für eine lineare SVM mit Abstand zu hoch sind und bei einer Begrenzung der Iterationen diese nicht mehr konvergiert.
+
+\bild{sample_size}{\textwidth}{Zusammenhang zwischen Stichprobenumfang und Zuverlässigkeit der Klassifizierung}{Zusammenhang zwischen Stichprobenumfang und Zuverlässigkeit der Klassifizierung}
+
+Wie in Abbildung \ref{img.sample_size} zu sehen, hat der Stichprobenumfang nur mit einer sehr niedrigen Anzahl an Artikeln einen Einfluss auf die Zuverlässigkeit der Klassifizierung. Ab 2000 Artikeln pro Zeitung, also insgesamt 16000 Artikeln, können keine relevanten Unterschiede in der Genauigkeit mehr festgestellt werden. Auffällig ist zudem, dass zwar das F-Maß des besten der 10 trainierten Klassifikatoren für 500 Artikel pro Zeitung höher als bei über 7000 Artikeln pro Zeitung ist, allerdings ist der Durchschnitt wesentlich schlechter. Da die Artikel jedes Mal zufällig ausgewählt werden, ist es möglich, dass dabei ein besonders gutes Set von Artikeln ausgewählt werden, welche sich besser voneinander unterscheiden lassen. Es wird jedoch deutlich, dass sich die Aussagekraft des Klassifikators mit einem größeren Stichprobenumfang erhöht und die Ergebnisse damit zuverlässiger sind. Die Erwartung, dass sich mit der Erhöhung des Stichprobenumfangs auch die Performance des Klassifikators verbessert, konnte sich allerdings nur bis zu einem unerwartet geringen Umfang bestätigt werden. Ein durchschnittliches F-Maß von 0,51 bedeutet zudem, dass die Artikel nicht besonders gut voneinander unterschieden werden können und eine zuverlässige Klassifizierung der Artikel nicht möglich ist. Eine klare Aussage über die Klassifizierung kann allerdings erst getroffen werden, wenn die F-Maße der einzelnen Klassen betrachtet werden.
+
+In Abbildung \ref{img.sample_size} ist ebenfalls zu erkennen, dass die maximale Anzahl an Artikeln pro Thema bei etwa 7500 liegt. Es steht nicht für jede Zeitung die gleiche Anzahl an Politik-Artikeln zur Verfügung, daher ergibt sich diese Grenze aus dem kleinstem Umfang der Artikel der Zeitungen. Die Datenmenge wird also so beschränkt, dass trotzdem noch für jede Zeitung die gleiche Anzahl an Artikeln verwendet wird. Diesen Prozess nennt man auch Undersampling. Für die meisten Zeitungen sind allerdings mehr als doppelt so viele Politik-Artikel im Datensatz enthalten. Daher wird im Folgenden überprüft, ob die Verwendung aller Politik-Artikel mit ungleicher Verteilung die Zuverlässigkeit der Klassifizierung erhöhen kann. Dafür wird sowohl das \textit{micro} als auch das \textit{macro} F-Maß mithilfe der logistischen Regression bestimmt und evaluiert.
+
+\begin{table}[h]
+\centering
+\begin{spacing}{1.25}
+\begin{tabular}[t]{rcc}
+\toprule
+~ & \multicolumn{2}{c}{F-Maß}\\
+~ & micro & macro\\
+Mit Undersampling & 0,5125 & 0,5078\\
+Ohne Undersampling & 0,5245 & 0,4766\\
+\bottomrule
+\end{tabular}
+\caption{Vergleich der Performance mit und ohne Undersampling der Daten}
+\label{undersampling}
+\end{spacing}
+\end{table}
+
+Die Tabelle \ref{undersampling} zeigt, dass sich die Performance des Klassifikators leicht verbessert, wenn alle Daten verwendet und kein Undersampling mehr angewandt wird. Dies jedoch nur unter der Annahme, dass die Verteilung der Testdaten ebenfalls der Verteilung der Trainingsdaten entspricht. Wenn im Testset für jede Zeitung die gleiche Anzahl an Artikeln verwendet wird, so verschlechtert sich die Zuverlässigkeit der Klassifizierung dramatisch (siehe \textit{macro} F-Maß). Das liegt daran, dass Artikel von Zeitungen mit geringerer Repräsentation bzw. geringerem Support wesentlich schlechter und seltener erkannt werden und damit vor allem die Trefferquote für Zeitungen mit geringem Support sehr schlecht ausfällt. Dies wird bei Betrachtung der individuellen F-Maße der Zeitungen eines Durchlaufes in Tabelle \ref{no_undersampling_individual} sehr deutlich. Folglich hat Undersampling einen positiven Einfluss auf die Zuverlässigkeit der Klassifizierung und ermöglicht eine unverzerrte Evaluierung der Performance.
+
+\begin{table}
+\centering
+\begin{spacing}{1.25}
+\begin{tabular}[t]{rcccc}
+\toprule
+~ & Genauigkeit & Trefferquote & F-Maß & Support\\
+\midrule
+Ärzte-Zeitung & 0.76 & 0.82 & 0.78 & 5542\\
+Handelsblatt & 0.52 & 0.58 & 0.55 & 6519\\
+RP Online & 0.32 & 0.11 & 0.16 & 2221\\
+Spiegel Online & 0.50 & 0.56 & 0.53 & 7384\\
+Tagesspiegel & 0.47 & 0.37 & 0.42 & 6122\\
+WA & 0.37 & 0.24 & 0.29 & 4304\\
+Welt & 0.47 & 0.50 & 0.48 & 7400\\
+Zeit Online & 0.53 & 0.65 & 0.58 & 7404\\
+\bottomrule
+\end{tabular}
+\caption{Performance der Klassifizierung der Zeitungen ohne Undersampling}
+\label{no_undersampling_individual}
+\end{spacing}
+\end{table}
+
+Weiterhin stellt sich heraus, dass die Genauigkeit und Trefferquote während der Klassifizierung je nach Zeitung sehr unterschiedlich ausfallen kann. Tabelle \ref{undersampling_individual} zeigt für einen Durchlauf, dass die \emph{Ärzte-Zeitung} weit besser von den restlichen Zeitungen unterschieden werden kann. Dies kann dadurch begründet werden, dass diese auch in ihren Politik-Artikeln überwiegend medizinische Themen behandelt und daher einen komplexeren Schreibstil verwendet. Innerhalb der restlichen Zeitungen gibt es ebenfalls Unterschiede in der Zuverlässigkeit der Klassifizierung. Das \emph{Handelsblatt} und die \emph{Zeit Online} werden ein wenig besser und der \emph{Westfälische Anzeiger} etwas schlechter als der Durchschnitt klassifiziert. Insgesamt ist die Klassifizierung der Zeitungen mit dem in dieser Arbeit verwendeten Featureset jedoch sehr unzuverlässig. Dies kann einerseits dadurch begründet werden, dass die Artikel der Zeitungen von vielen verschiedenen Autoren geschrieben werden und sich daraus kein kohärenter Schreibstil identifizieren lässt. Andererseits ist es möglich, dass der Schreibstil einer Zeitung durch die verwendeten Features nicht akkurat genug repräsentiert wird. Aus diesem Grund wird der Einfluss der einzelnen Features im Folgenden genauer untersucht.
+
+\begin{table}[h]
+\centering
+\begin{spacing}{1.25}
+\begin{tabular}[t]{rccc}
+\toprule
+~ & Genauigkeit & Trefferquote & F-Maß\\
+\midrule
+Ärzte-Zeitung & 0.80 & 0.84 & 0.82\\
+Handelsblatt & 0.52 & 0.60 & 0.56\\
+RP Online & 0.47 & 0.42 & 0.44\\
+Spiegel Online & 0.45 & 0.47 & 0.46\\
+Tagesspiegel & 0.47 & 0.40 & 0.43\\
+WA & 0.40 & 0.33 & 0.36\\
+Welt & 0.45 & 0.47 & 0.46\\
+Zeit Online & 0.50 & 0.59 & 0.54\\
+\bottomrule
+\end{tabular}
+\caption{Performance der Klassifizierung der Zeitungen mit Undersampling}
+\label{undersampling_individual}
+\end{spacing}
+\end{table}
+
 
 
 \section{Clustering}
