@@ -195,9 +195,7 @@ Es gibt eine Vielzahl an Features, die für einen Text generiert bzw. ausgewähl
 Für die Bestimmung lexikalischer Features ist lediglich die Tokenisierung eines Textes notwendig und erfordert somit einen vergleichsweise geringen Aufwand. Die einfachsten Merkmale sind hierbei die durchschnittliche Satz- oder Wortlänge und werden schon seit den Anfängen der Forschung im Bereich der Erkennung der Autorschaft oder des Genres eines Textes verwendet \cite[S.~473]{stamatatos2000automatic}. Obwohl sie nicht besonders allgemeingültig sind, spielen diese Merkmale doch immer noch eine Schlüsselrolle in der Unterscheidung von Textgenres \cite{cimino2017identifying} und sind daher auch in dieser Arbeit Teil des Featuresets.
 
 Weiterhin existieren diverse Indizes, welche versuchen, die Lesbarkeit auf einer Skala von 0 (schwer) bis 100 (einfach) zu ermitteln oder dem Text eine Schulstufe zuzuordnen, die abgeschlossen sein muss, um den Text verstehen zu können. Diese berechnen sich meist aus einer Kombination der Anzahl an Silben, Wörtern und Sätzen im Text. Einer der ältesten und populärsten Indizes ist der 1948 veröffentlichte Flesch-Grad \cite{mccallum1982computer}. Dieser wurde zwar ursprünglich für die englische Sprache entwickelt und ist damit nicht besonders gut geeignet für den in dieser Arbeit verwendeten Korpus, aber Toni Amstad konnte den Flesch-Grad später auf die deutsche Sprache übertragen \cite[K.~9]{rottensteiner2010structure}. Dieser berechnet sich wie folgt:
-
 \[ FG = 180 - \frac{W}{T} - (58,5 \cdot \frac{S}{W}) \]
-
 $ S $ ist die Gesamtzahl der Silben\\
 $ W $ ist die Gesamtzahl der Wörter\\
 $ T $ ist die Gesamtzahl der Sätze
@@ -461,7 +459,10 @@ Da das Clustering nach Hauptkomponentenanalyse keine guten Ergebnisse erzielen k
 \bild{tsne_temp}{0.9\textwidth}{Clustering der Politik-Artikel mit dem t-SNE Verfahren}{Clustering der Politik-Artikel mit dem t-SNE Verfahren}
 \todo{T-SNE Bild austauschen}
 
-\chapter{Ergebnis}
+\chapter{Fazit und Ausblick}
+In dieser Arbeit wurde untersucht, inwiefern ausgewählte Zeitungen gruppiert werden können, mit der Restriktion, dass nur Features verwendet werden, welche unabhängig vom Inhalt sind. Die in dieser Arbeit untersuchten Features konnten jedoch den Schreibstil einer Zeitung nicht genügend erfassen und repräsentieren. Für den Bereich der Erkennung der Autorschaft oder des Genres eines Textes haben sich solche Features zwar für die Klassifizierung als sehr geeignet herausgestellt, die Texte weisen dort jedoch größere syntaktische Unterschiede auf. Die Artikel von Zeitungen werden von vielen verschiedenen Autoren verfasst und berichten über sehr ähnliche Themen, sodass die Ergebnisse dieser Arbeit nicht direkt damit verglichen werden können. Die Gruppierung dieser Zeitungen stellte sich als eine noch schwierigere Aufgabe heraus, da dann nicht nur ein Text als Vektor repräsentiert werden muss, sondern ein ganzer Korpus. Der Ansatz, die Artikel zu clustern stellte sich als besser heraus, die Ergebnisse der Klassifizierung zeigen jedoch schon, dass diese untereinander nicht gut voneinander unterschieden werden können und damit ist auch hier eine Gruppierung nicht zielführend.
+
+Es gibt jedoch Potenzial bei der Klassifizierung der Zeitungen unter Verwendung inhaltlicher Features wie die N-Gramme der Buchstaben. Diese stellten sich auch über Themen hinweg als robuste Merkmale für die Erkennung der Autorschaft eines Textes heraus \cite{stamatatos2013robustness} und könnten auch für die Klassifizierung der Zeitungen erheblich bessere Resultate erzielen. Dabei sind die Ergebnisse  dann auch nicht mehr abhängig von der Genauigkeiten der in der Pipeline verwendeten Tools, sondern nur noch von der korrekten Repräsentation der Texte im Datensatz. Es ist zudem möglich, abhand von Topic Models oder  ähnlichen Repräsentationen eines Textes, die Zeitungen nur nach ihren Inhalten zu gruppieren. Hierbei spielt jedoch der verwendete Korpus eine maßgebende Rolle. Für einen aussagekräftigen Vergleich, muss der Zeitraum für jede Zeitung gleich und die Sammlung der Artikel annähernd komplett oder zumindest sehr repräsentativ sein.
 
 \bibliographystyle{alphadin_martin}
 \bibliography{bibliographie}
