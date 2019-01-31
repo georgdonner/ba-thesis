@@ -437,15 +437,29 @@ Die Monogramme der Dependency Relations sind für die Klassifizierung nicht als 
 Das Featureset \textit{lemma} ist auch nicht ausreichend, um eine gute Klassifizierung der Zeitungen zu erreichen, obwohl es aus insgesamt 97 Features besteht. Die leicht bessere Performance im Vergleich zu \textit{dep} ist möglicherweise dadurch bedingt, dass es mehr als doppelt so viele Features sind. Obwohl sich die häufigsten Lemma eines Korpus für die Erkennung der Autorschaft und des Genres eines Textes in bisherigen Studien als entscheidende Features bewährt haben, eignen sich diese für die Klassifizierung der in dieser Arbeit verwendeten Texte nicht. Die Effektivität dieser Features beruht jedoch vor allem auf der Annahme, dass Autoren diese Wörter unterbewusst verwenden und daher bei jedem die Verteilung etwas anders ausfällt. In diesem Datensatz sind pro Zeitung jedoch eine Vielzahl an Autoren für die Artikel verantwortlich und so ist es sehr unwahrscheinlich, dass sich über diese hinweg innerhalb der Zeitung ein kohärenter Schreibstil entwickelt. Dafür müsste sich die unterbewusste Verwendung der Synsemantika innerhalb der Autoren einer Zeitung stark ähneln.
 
 \section{Clustering}
-Zuerst wurde untersucht, ob beim Clustering der einzelnen Artikeln jeder Zeitung Cluster entstehen, welche die einzelnen Zeitungen repräsentieren. Weiterhin wird überprüft, ob sich dabei Cluster ergeben, die Artikel verschiedener Zeitung haben. Das wäre dann schon ein sehr guter Indikator dafür, dass zwei oder mehr Zeitungen einen ähnlichen Schreibstil haben.
+Für das Clustering wird zunächst eine Hauptkomponentenanalyse (PCA) durchgeführt, welche die Dimensionalität der Daten auf Zwei reduziert. Hierfür werden wieder die Politik-Artikel der Zeitungen verwendet. In den zwei so entstandenen Linearkombinationen bleiben unter Verwendung aller Features etwa 10\% der Informationen erhalten. Werden nur die besten 80 Features nach Recursive Feature Elimination verwendet, bleiben zwar fast 20\% der Informationen erhalten, aber wie in Abbildung \ref{fig:pca} zu sehen, ergibt sich kaum ein anderes Bild. Dies ist zwar in beiden Grafiken keine genaue Annäherung an den wirklichen hochdimensionalen Raum, den die Featurevektoren bilden, aber oftmals trotzdem nützlich, um einen Überblick über die Verteilung zu bekommen. Die Punkte sind mit einem Alphawert von 0,2 eingezeichnet, damit die Konzentration der Punkte noch besser deutlich wird. In Abbildung \ref{fig:pca} ist gut zu sehen, dass die Datenpunkte zwar sehr weit verteilt sind, aber es zeigen sich bereits kleinere Tendenzen in den Durchschnitten der Zeitungen. Trotzdem ist anzumerken, dass die Streuung immens hoch ist und demnach aus dieser Grafik keine aussagekräftigen Erkenntnisse über eine mögliche Gruppierung der Zeitungen aus ihren Durchschnitten gewonnen werden können. Den Durchschnitt einer Zeitung für das Clustering zu verwenden ist folglich weder aussagekräftig noch zielführend. Es ist zudem zu erkennen, dass Clustering der einzelnen Artikel nach der Hauptkomponentenanalyse unmöglich ist.
 
-Ein weiterer Ansatz ist es, den Durchschnitt jeder Zeitung zu berechnen und anschließend die Zeitungen zu clustern. Dies hat jedoch Nachteile: Der Durchschnitt einer Zeitung ist nicht besonders repräsentativ, besonders wenn die Standardabweichung hoch ist. Zudem gibt es hier je nach Kategorie nur etwa 8 oder weniger "Beobachtungen" die geclustert werden können.
-\subsection{Feature Extraction}
-Wie in den Grundlagen bereits beschrieben, ist es beim Clustering besonders wichtig, dass die Dimensionalität nicht hoch ist. Vor allem für die Visualisierung ist es notwendig, die Features auf zwei Dimensionen zu reduzieren.
-\subsubsection*{PCA}
-Hauptkomponentenanalyse: welche Ergebnisse gibt es hier?
-\subsubsection*{t-SNE}
-Ein Verfahren, was genau dafür gedacht ist visuell Cluster zu zeigen, bei denen die Distanz untereinander im Plot keine Aussagekraft hat. Wie sehen hier die Ergebnisse aus? Spoiler: KACKEE
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.49\textwidth}
+      \includegraphics[width=\textwidth]{pca_all}
+      \caption{PCA mit allen Features}
+      \label{fig:pca_all}
+  \end{subfigure}
+  ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+    %(or a blank line to force the subfigure onto a new line)
+  \begin{subfigure}[b]{0.49\textwidth}
+      \includegraphics[width=\textwidth]{pca_best_80}
+      \caption{PCA mit den besten 80 Features}
+      \label{fig:pca_best_80}
+  \end{subfigure}
+  \caption{Hauptkomponentenanalyse (PCA) der Politik-Artikel}\label{fig:pca}
+\end{figure}
+
+Da das Clustering nach Hauptkomponentenanalyse keine guten Ergebnisse erzielen kann, wird zudem t-SNE eingesetzt, um Cluster der Artikel zu finden. Dieses Verfahren wird mit steigender Anzahl an Datenpunkten und vor allem höherer Dimensionalität sehr viel rechenintensiver. Daher wird die Anzahl der Artikel pro Zeitung auf etwa 1000 begrenzt und die Dimensionalität mithilfe von PCA auf 125 reduziert. Hierbei ist es notwendig, verschiedene Kombinationen aus der Anzahl an Iterationen \texttt{n\_iter}, der Lernrate \texttt{learning\_rate}, und des Parameters \texttt{perplexity}, zu testen, da diese Variablen großen Einfluss auf das Endergebnis besitzen. Für \texttt{n\_iter} werden 500, 1000 und 2000, für \texttt{learning\_rate} 10, 20, 40, 100 und 500 und für \texttt{perplexity} 10, 25, 50, 60, 75 und 100 als Werte verwendet. Aus allen 90 Kombinationen ergibt sich jedoch kein Diagramm, welches gute Cluster zeigt und Artikel der gleichen Zeitungen sind auch hier über den ganzen Raum verteilt. Abbildung \ref{img.tsne_temp} zeigt dabei das "'beste"' Ergebnis mit der Kombination \texttt{n\_iter = 2000}, \texttt{learning\_rate = 20} und \texttt{perplexity = 50}. Dabei ist zu beachten, dass die Distanzen der Punkte im Diagramm untereinander keine Bedeutung haben und das Verfahren nur Cluster findet und visuell darstellt. Folglich ist es nicht möglich, die Artikel oder Zeitungen anhand der in dieser Arbeit verwendeten Features zu gruppieren.
+
+\bild{tsne_temp}{0.9\textwidth}{Clustering der Politik-Artikel mit dem t-SNE Verfahren}{Clustering der Politik-Artikel mit dem t-SNE Verfahren}
+\todo{T-SNE Bild austauschen}
 
 \chapter{Ergebnis}
 
