@@ -284,9 +284,8 @@ Lexikalische Dichte & -0,03 & -0,30 & 0,29 & 1,00\\
 \end{spacing}
 \end{table}
 
-Die Tabelle \ref{correlation} zeigt die Korrelationen der Features, indem der Korrelationskoeffizient $r_{xy}$ berechnet wird. Dieser ist definiert durch:
-\[ r_{xy} = \frac{s_{xy}}{s_x s_y} = \frac{\sum_{i=1}^n (x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^n (x_i-\bar{x})^2} \sqrt{\sum_{i=1}^n (y_i-\bar{y})^2}}\]
-Hierbei sind $(x_1,y_1),\dots,(x_n,y_n)$ ein gepaarter Datensatz an Features $\bar{x}$ und $\bar{y}$ jeweils die Mittelwerte der Features. Je höher der Betrag des Koeffizienten, umso stärker ist die Korrelation. Ein Wert von unter 0,5 signalisiert eine schwache Korrelation, ab 0,8 wird von einer starken Korrelation der Variablen gesprochen \cite[S.~268-273]{burkschat2012beschreibende}.\\
+Die Tabelle \ref{correlation} zeigt die Korrelationen der Features, indem der Korrelationskoeffizient berechnet wird. Je höher der Betrag des Koeffizienten, umso stärker ist die Korrelation. Ein Wert von unter 0,5 signalisiert eine schwache Korrelation, ab 0,8 wird von einer starken Korrelation der Variablen gesprochen \cite[S.~268-273]{burkschat2012beschreibende}.
+
 Die Tabelle \ref{correlation} zeigt bereits, dass die Variablen untereinander nicht alle unabhängig sind. Dennoch sind die Korrelationskoeffizienten nicht besonders hoch und signalisieren damit einen schwachen Zusammenhang zwischen den Variablen. Da die durchschnittliche Satzlänge Teil der Formel für den Flesch-Grad ist, ist die Abhängigkeit hier besonders offensichtlich. Diese Abhängigkeit hat den höchsten Koeffizient mit -0,4, die Artikel werden hier jedoch trotzdem weit verteilt liegen. Dies wird durch Abbildung \ref{img.sent_length_readability} sehr gut verdeutlicht. Hier ist jeder der ingesamt 865797 analysierten Artikel in das Diagramm eingezeichnet, jeder Artikel hat dabei einen Alphawert von 0,005, welcher die Durchsichtigkeit eines Punktes angibt. Durch die tiefblauen Punkte wird ebenfalls erkenntlich, dass sich doppelte Artikel im Datensatz befinden müssen.
 
 \bild{sent_length_readability}{\textwidth}{Korrelation der durchschnittlichen Satzlänge und dem Flesch-Grad}{Korrelation der durchschnittlichen Satzlänge und dem Flesch-Grad}
@@ -313,19 +312,28 @@ Weiterhin werden vor der Klassifizierung Artikel herausgefiltert, welche fehlerh
 \subsection{Feature Selection}\label{feature_selection}
 Zunächst werden nur Features für die Klassifizierung verwendet, welche nach der Standardisierung eine Varianz von Eins besitzen. Ein abweichender Wert für die Varianz kann nur vorkommen, wenn alle Artikel für das Feature den gleichen Wert haben.
 
-Um den Einfluss der verschiedenen Gruppen an Features auf die Genauigkeit der Klassifizierung zu untersuchen, werden zudem sieben Featuresets getestet. Diese werden im Folgenden vorgestellt und mit einem Label versehen, dabei gibt N die Größe des Featuresets \emph{nach} der Aussortierung von Features mit einer Varianz von weniger als Eins an.
+Um den Einfluss der verschiedenen Gruppen an Features auf die Genauigkeit der Klassifizierung zu untersuchen, werden sieben Featuresets getestet. Diese werden in Tabelle \ref{table:featuresets} vorgestellt und sind für die bessere Referenzierung mit einem Label versehen.
 
-\begin{tabular}{lll}
-  \emph{pos} & Features 4.-59. & N=55\\
-  \emph{dep} & Features 60.-101. & N=42\\
-  \emph{lemma} & Features 102.-201. & N=97\\
-  \emph{-pos} & Alle Features außer \emph{pos} & N=144\\
-  \emph{-dep} & Alle Features außer \emph{dep}& N=156\\
-  \emph{-lemma} & Alle Features außer \emph{lemma} & N=100\\
-  \emph{alle} & Alle Features & N=198\\
+\begin{table}[h]
+\centering
+\begin{spacing}{1.25}
+\begin{tabular}{rlr}
+Label & Features & Anzahl an Features\footnote{Die Anzahl der Features wird \emph{nach} der Aussortierung von Features mit einer Varianz von weniger als 1 gemessen}\\
+\midrule
+\emph{pos} & Features 4.-59. & 55\\
+\emph{dep} & Features 60.-101. & 42\\
+\emph{lemma} & Features 102.-201. & 97\\
+\emph{-pos} & Alle Features außer \emph{pos} & 144\\
+\emph{-dep} & Alle Features außer \emph{dep}& 156\\
+\emph{-lemma} & Alle Features außer \emph{lemma} & 100\\
+\emph{alle} & Alle Features & 198\\
 \end{tabular}
+\caption{In dieser Arbeit verwendete Featuresets}
+\label{table:featuresets}
+\end{spacing}
+\end{table}
 
-% Welche Verfahren wurden zur Feature Selection verwendet? Warum? Warum war das überhaupt nötig. Vergleich zu bzw. Verweis auf bisherige(n) Studien zur Feature Selection zur Genre/Author detection.
+Für die Analyse einzelner Features wird \textit{Recursive Feature Elimination} (RFE) verwendet. Dies funktioniert mit einem linearen Klassifikator, wie der logistischen Regression, welcher den Features Gewichte zuordnet. Dabei werden zunächst alle Features verwendet und anschließend die mit dem geringsten Einfluss auf die Klassifizierung eliminiert. Dies wird rekursiv wiederholt, bis die gewünschte Anzahl an Features erreicht ist \cite[Seite: sklearn.feature\_selection.RFE]{scikitlearnAPIReference}. Dabei muss die Anzahl der pro Durchlauf eliminierten Features nicht unbedingt 1 sein, dies führt jedoch zu den besten Ergebnissen und wird aus diesem Grund in dieser Arbeit so verwendet.
 
 \subsection{Verfahren}
 Bevor eine Klassifizierung durchgeführt werden kann, muss zunächst erarbeitet werden, welche Verfahren dafür verwendet werden sollen. Da Featuresets für die Erkennung der Autorschaft üblicherweise aus tausenden Features bestehen, werden hierfür Algorithmen eingesetzt, welche mit diesen hochdimensionalen Daten in einer annehmbaren Laufzeit gute Ergebnisse erzielen. Dabei muss so gut wie möglich vermieden werden, sich zu sehr an die Trainingsdaten anzupassen, dies wird auch Overfitting genannt. Es zeigte sich, dass die Support Vector Machine (SVM) hierfür eine der besten Methoden ist \cite{li2006fingerprint, stamatatos2009survey}.
@@ -359,13 +367,16 @@ In diesem Beispiel hat der Spiegel folglich ein F-Maß von rund 0,75. Für die B
 \end{spacing}
 \end{table}
 
-\subsection{Ergebnisse}
+\section{Ergebnisse}
+
+\subsection{Stichprobenumfang}
 Zunächst wird die Auswirkung des Stichprobenumfangs auf die Zuverlässigkeit der Klassifizierung untersucht. Hierfür wird das Thema \emph{Politik} verwendet, da 8 der 9 Zeitungen Artikel zu diesem Thema verfasst haben und die Menge der zur Verfügung stehenden Artikel hier am größten ist. Für jeden ausgewählten Stichprobenumfang werden 10 Durchläufe ausgeführt und anschließend sowohl das durchschnittliche als auch das beste \textit{micro} F-Maß als Metrik für die Zuverlässigkeit verwendet. Für die Klassifizierung wird ausschließlich logistische Regression verwendet, da die Laufzeiten für eine lineare SVM mit Abstand zu hoch sind und bei einer Begrenzung der Iterationen diese nicht mehr konvergiert.
 
 \bild{sample_size}{\textwidth}{Zusammenhang zwischen Stichprobenumfang und Zuverlässigkeit der Klassifizierung}{Zusammenhang zwischen Stichprobenumfang und Zuverlässigkeit der Klassifizierung}
 
 Wie in Abbildung \ref{img.sample_size} zu sehen, hat der Stichprobenumfang nur bei einer sehr niedrigen Anzahl an Artikeln einen Einfluss auf die Zuverlässigkeit der Klassifizierung. Ab 2000 Artikeln pro Zeitung, also insgesamt 16000 Artikeln, können keine relevanten Unterschiede in der Genauigkeit mehr festgestellt werden. Auffällig ist zudem, dass zwar das F-Maß des Besten der 10 trainierten Klassifikatoren für 500 Artikel pro Zeitung höher als bei über 7000 Artikeln pro Zeitung ist, allerdings ist der Durchschnitt wesentlich schlechter. Da die Artikel jedes Mal zufällig ausgewählt werden, ist es möglich, dass dabei ein besonders gutes Set von Artikeln ausgewählt wird, in dem sich die Artikel besser voneinander unterscheiden lassen. Es wird jedoch deutlich, dass sich die Aussagekraft des Klassifikators mit einem größeren Stichprobenumfang erhöht und die Ergebnisse damit zuverlässiger sind. Die Erwartung, dass sich mit der Erhöhung des Stichprobenumfangs auch die Performance des Klassifikators verbessert, konnte sich allerdings nur bis zu einem unerwartet geringen Umfang bestätigt werden. Ein durchschnittliches F-Maß von 0,51 bedeutet zudem, dass die Artikel nicht besonders gut voneinander unterschieden werden können und eine zuverlässige Klassifizierung der Artikel nicht möglich ist. Eine klare Aussage über die Klassifizierung kann allerdings erst getroffen werden, wenn die F-Maße der einzelnen Klassen betrachtet werden.
 
+\subsection{Undersampling}
 In Abbildung \ref{img.sample_size} ist ebenfalls zu erkennen, dass die maximale Anzahl an Artikeln pro Thema bei etwa 7500 liegt. Es steht nicht für jede Zeitung die gleiche Anzahl an Politik-Artikeln zur Verfügung, daher ergibt sich diese Grenze aus dem kleinstem Umfang der Artikel der Zeitungen. Die Datenmenge wird also so beschränkt, dass trotzdem noch für jede Zeitung die gleiche Anzahl an Artikeln verwendet wird. Diesen Prozess nennt man auch Undersampling. Für die meisten Zeitungen sind allerdings mehr als doppelt so viele Politik-Artikel im Datensatz enthalten. Daher wird im Folgenden überprüft, ob die Verwendung aller Politik-Artikel mit ungleicher Verteilung die Zuverlässigkeit der Klassifizierung erhöhen kann. Dafür wird sowohl das \textit{micro} als auch das \textit{macro} F-Maß mithilfe der logistischen Regression bestimmt und evaluiert.
 
 \begin{table}[h]
@@ -408,6 +419,7 @@ Zeit Online & 0.53 & 0.65 & 0.58 & 7404\\
 \end{spacing}
 \end{table}
 
+\subsection{Unterschiede pro Zeitung}
 Weiterhin stellt sich heraus, dass die Genauigkeit und Trefferquote während der Klassifizierung je nach Zeitung sehr unterschiedlich ausfallen kann. Tabelle \ref{undersampling_individual} zeigt für einen Durchlauf, dass die \emph{Ärzte-Zeitung} weit besser von den restlichen Zeitungen unterschieden werden kann. Dies kann dadurch begründet werden, dass diese auch in ihren Politik-Artikeln überwiegend medizinische Themen behandelt und daher einen komplexeren Schreibstil verwendet. Innerhalb der restlichen Zeitungen gibt es ebenfalls Unterschiede in der Zuverlässigkeit der Klassifizierung. Das \emph{Handelsblatt} und die \emph{Zeit Online} werden ein wenig besser und der \emph{Westfälische Anzeiger} etwas schlechter als der Durchschnitt klassifiziert. Insgesamt ist die Klassifizierung der Zeitungen mit dem in dieser Arbeit verwendeten Featureset jedoch sehr unzuverlässig. Dies kann einerseits dadurch begründet werden, dass die Artikel der Zeitungen von vielen verschiedenen Autoren geschrieben werden und sich daraus kein kohärenter Schreibstil identifizieren lässt. Andererseits ist es möglich, dass der Schreibstil einer Zeitung durch die verwendeten Features nicht akkurat genug repräsentiert wird. Aus diesem Grund wird der Einfluss der einzelnen Features im Folgenden genauer untersucht.
 
 \begin{table}[h]
@@ -432,6 +444,7 @@ Zeit Online & 0.50 & 0.59 & 0.54\\
 \end{spacing}
 \end{table}
 
+\subsection{Features}
 Für die Auswertung der Features werden zunächst die in Kapitel \ref{feature_selection} beschriebenen Featuresets ausgewertet. Hierfür werden erneut 10 Klassifikatoren mit multinomialer logistischer Regression trainiert und anschließend der Durchschnitt der \textit{micro} jeweiligen F-Maße gebildet.
 
 \bild{featuresets}{\textwidth}{Performance der Featuresets}{Performance der Featuresets}
@@ -440,7 +453,11 @@ Abbildung \ref{img.featuresets} zeigt deutlich, dass die POS-Tags für die Klass
 Die Monogramme der Dependency Relations sind für die Klassifizierung nicht als Features geeignet und geben kaum Aufschluss über den Schreibstil einer Zeitung. Ein möglicher Grund ist die bereits angesprochene, geringere Zuverlässigkeit der Bestimmung, wodurch die Features auf Basis der Dependency Relations möglicherweise zu viel Rauschen in den Datensatz bringen.\\
 Das Featureset \textit{lemma} ist auch nicht ausreichend, um eine gute Klassifizierung der Zeitungen zu erreichen, obwohl es aus insgesamt 97 Features besteht. Die leicht bessere Performance im Vergleich zu \textit{dep} ist möglicherweise dadurch bedingt, dass es mehr als doppelt so viele Features sind. Obwohl sich die häufigsten Lemma eines Korpus für die Erkennung der Autorschaft und des Genres eines Textes in bisherigen Studien als entscheidende Features bewährt haben, eignen sich diese für die Klassifizierung der in dieser Arbeit verwendeten Texte nicht. Die Effektivität dieser Features beruht jedoch vor allem auf der Annahme, dass Autoren diese Wörter unterbewusst verwenden und daher bei jedem die Verteilung etwas anders ausfällt. In diesem Datensatz sind pro Zeitung jedoch eine Vielzahl an Autoren für die Artikel verantwortlich und so ist es sehr unwahrscheinlich, dass sich über diese hinweg innerhalb der Zeitung ein kohärenter Schreibstil entwickelt. Dafür müsste sich die unterbewusste Verwendung der Synsemantika innerhalb der Autoren einer Zeitung stark ähneln.
 
-\section{Clustering}
+Die Auswertung des Einflusses einzelner Features wird mithilfe von \emph{Recursive Feature Elimination} (RFE) durchgeführt. Dafür werden die für die Klassifizierung mit multinomialer logistischer Regression wichtigsten 10, 50 und 80 Features bestimmt. Abbildung \ref{img.feature_distribution} zeigt den Anteil der Gruppen \textit{LEX} (Features 1.-3.), \textit{POS} (Features 4.-59.), \textit{DEP} (Features 60.-101.) und \textit{LEMMA} (Features 102.-201.) an der Gesamtheit der nach RFE verbleibenden Features. Es bestätigt sich, dass die POS-Tags einen sehr großen Einfluss auf die Klassifizierung haben und vor allem die häufigsten Lemmma sehr schlecht abschneiden. Bei genauerer Betrachtung der 10 besten Features \texttt{['lex\_sent\_length', 'lex\_readability', 'tag\_PTKNEG', 'tag\_\$.', 'tag\_\$(', 'tag\_\_SP', 'tag\_NE', 'tag\_\$,', 'dep\_punct', 'dep\_ng']}\footnote{Die Bedeutung der Kürzel für POS-Tags und Dependency Relations sind auf https://spacy.io/api/annotation nachzulesen}, \newline fällt jedoch auf, dass ein großer Teil der Features die Zeichensetzung des Textes messen und die Satzzeichen damit als ein gutes Unterscheidungsmerkmal der Artikel identifizieren. Dies kann zusätzlich dadurch bedingt sein, dass die Bestimmung dieser POS-Tags besonders einfach und akkurat ist und daher kaum Rauschen hinzufügt.
+
+\bild{feature_distribution}{\textwidth}{Die wichtigsten Features nach Recursive Feature Elimination}{Die wichtigsten Features nach Recursive Feature Elimination}
+
+\subsection{Clustering}
 Für das Clustering wird zunächst eine Hauptkomponentenanalyse (PCA) durchgeführt, welche die Dimensionalität der Daten auf Zwei reduziert. Hierfür werden wieder die Politik-Artikel der Zeitungen verwendet. In den zwei so entstandenen Linearkombinationen bleiben unter Verwendung aller Features etwa 10\% der Informationen erhalten. Werden nur die besten 80 Features nach Recursive Feature Elimination verwendet, bleiben zwar fast 20\% der Informationen erhalten, aber wie in Abbildung \ref{fig:pca} zu sehen, ergibt sich kaum ein anderes Bild. Dies ist zwar in beiden Grafiken keine genaue Annäherung an den wirklichen hochdimensionalen Raum, den die Featurevektoren bilden, aber oftmals trotzdem nützlich, um einen Überblick über die Verteilung zu bekommen. Die Punkte sind mit einem Alphawert von 0,2 eingezeichnet, damit die Konzentration der Punkte noch besser deutlich wird. In Abbildung \ref{fig:pca} ist gut zu sehen, dass die Datenpunkte zwar sehr weit verteilt sind, aber es zeigen sich bereits kleinere Tendenzen in den Durchschnitten der Zeitungen. Trotzdem ist anzumerken, dass die Streuung immens hoch ist und demnach aus dieser Grafik keine aussagekräftigen Erkenntnisse über eine mögliche Gruppierung der Zeitungen aus ihren Durchschnitten gewonnen werden können. Den Durchschnitt einer Zeitung für das Clustering zu verwenden ist folglich weder aussagekräftig noch zielführend. Es ist zudem zu erkennen, dass Clustering der einzelnen Artikel nach der Hauptkomponentenanalyse unmöglich ist.
 
 \begin{figure}
