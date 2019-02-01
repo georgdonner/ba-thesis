@@ -136,7 +136,7 @@ Eine häufig verwendete Alternative zu spaCy ist NLTK, kurz für Natural Languag
 Bevor die gegebenen Daten für das Extrahieren von Features verwendet werden, ist es ratsam, zunächst einen Überblick über die Struktur zu bekommen. Häufig befinden sich fehlerhafte Daten im Datensatz und auch das Format entspricht nicht immer den Erwartungen oder ist unregelmäßig. Die in dieser Arbeit getroffenen Maßnahmen, um den Datensatz bereit für die Textverarbeitung zu machen, werden in diesem Kapitel genauer erläutert.
 
 \subsection{Datensatz}
-Der in dieser Arbeit verwendete Datensatz wurde von Ole Wendt erstellt und enthält etwas mehr als zehn Millionen Artikel bis Juni 2018 für neun verschiedene Zeitungen. Tabelle \ref{data} lässt jedoch erkennen, dass die Anzahl der Artikel je nach Zeitung sehr unterschiedlich ist. Für die Speicherung der Daten wurde das relationale Datenbanksystem \emph{SQLite} gewählt.
+Der in dieser Arbeit verwendete Datensatz wurde von Ole Wendt erstellt und enthält etwas mehr als zehn Millionen Artikel bis Juni 2018 für neun verschiedene Zeitungen. Tabelle \ref{table.data} lässt jedoch erkennen, dass die Anzahl der Artikel je nach Zeitung sehr unterschiedlich ist. Für die Speicherung der Daten wurde das relationale Datenbanksystem \emph{SQLite} gewählt.
 
 \begin{table}[h]
 \centering
@@ -157,7 +157,7 @@ Zeit Online & 2242198 \\
 \bottomrule
 \end{tabular}
 \caption{Größe des Datensatzes}
-\label{data}
+\label{table.data}
 \end{spacing}
 \end{table}
 
@@ -203,7 +203,7 @@ $ S $ ist die Gesamtzahl der Silben\\
 $ W $ ist die Gesamtzahl der Wörter\\
 $ T $ ist die Gesamtzahl der Sätze
 
-Tabelle \ref{fleschgrad} zeigt, wie die Ergebnisse der Berechnung interpretiert werden sollen.
+Tabelle \ref{table.fleschgrad} zeigt, wie die Ergebnisse der Berechnung interpretiert werden sollen.
 
 \begin{table}[h]
 \centering
@@ -222,7 +222,7 @@ Flesch-Grad & Lesbarkeit & Bildungsstand\\
 \bottomrule
 \end{tabular}
 \caption{Flesch-Grad Bewertungen und äquivalenter Bildungsstand \cite[S.~406]{courtis2002reading}}
-\label{fleschgrad}
+\label{table.fleschgrad}
 \end{spacing}
 \end{table}
 
@@ -247,9 +247,13 @@ Die lexikalische Dichte eines Textes ist sein Verhältnis von Autosemantika bzw.
 
 Weiterhin werden die Monogramme der beim Dependency Parsing berechneten Dependency Relations als Features verwendet, indem die jeweiligen Frequenzen pro Artikel bestimmt werden. Auch hier ist es möglich Bigramme zu berechnen, allerdings würde das die Dimensionalität der Featurevektoren beträchtlich erhöhen und die Frequenzen verringern. Damit spiele die Länge der Texte eine noch größere Rolle.
 
+\clearpage
 \subsection{Featureset}
-In dieser Arbeit werden insgesamt 201 Features verwendet und untersucht. Im Folgenden wird ein Überblick über das Featureset gegeben:
+In dieser Arbeit werden insgesamt 201 Features verwendet und untersucht. Tabelle \ref{table.allfeatures} gibt einen Überblick über alle in dieser Arbeit verwendeten Features.
 
+\begin{table}[h]
+\centering
+\begin{spacing}{1.25}
 \begin{tabular}{rl}
   1. & Durchschnittliche Satzlänge\\
   2. & Flesch-Grad\\
@@ -259,6 +263,10 @@ In dieser Arbeit werden insgesamt 201 Features verwendet und untersucht. Im Folg
   60-101. & Frequenzen der Monogramme aller Dependency Relations\\
   102-201. & Frequenzen der 100 häufigsten Lemmata des Korpus
 \end{tabular}
+\caption{Überblick über das gesamte Featureset}
+\label{table.allfeatures}
+\end{spacing}
+\end{table}
 
 \chapter{Datenauswertung}
 Das Ziel dieser Arbeit ist es, zu untersuchen, inwiefern die Zeitungen gruppiert werden können. Der Vergleich der Zeitungen erfolgt dabei anhand des ausgewählten Featuresets. Bevor jedoch ein Clustering bzw. eine Gruppierung der Artikel oder Zeitungen durchgeführt werden kann, ist es notwendig, zunächst die Performanz der Features zu überprüfen. Hierbei wird untersucht, inwiefern die Features ausreichend sind, um Zeitungen voneinander zu unterscheiden. Um dies auswerten zu können, wird eine Klassifizierung der Zeitungen durchgeführt und die Ergebnisse mit verschiedenen Methoden ausgewertet. Für das Clustering wird zunächst überprüft, ob Cluster entstehen, wenn jeder Artikel jeder Zeitung als eigener Wert verwendet wird. Weiterhin werden die Durchschnitte der Zeitungen berechnet und anschließend für das Clustering verwendet. Sowohl die Klassifizierung als auch das Clustering wird themenspezifisch durchgeführt, folglich werden nur Artikel eines bestimmten Themas zur Analyse verwendet. Dadurch wird festgestellt, ob die Performanz des Featuresets je nach Thema unterschiedlich ausfällt und welche Features jeweils besser geeignet sind.
@@ -280,13 +288,13 @@ Lexikalische Dichte & -0,03 & -0,30 & 0,29 & 1,00\\
 \bottomrule
 \end{tabular}
 \caption{Pearson-Korrelation der Features 1. bis 4.}
-\label{correlation}
+\label{table.correlation}
 \end{spacing}
 \end{table}
 
-Die Tabelle \ref{correlation} zeigt die Korrelationen der Features, indem der Korrelationskoeffizient berechnet wird. Je höher der Betrag des Koeffizienten, umso stärker ist die Korrelation. Ein Wert von unter 0,5 signalisiert eine schwache Korrelation, ab 0,8 wird von einer starken Korrelation der Variablen gesprochen \cite[S.~268-273]{burkschat2012beschreibende}.
+Die Tabelle \ref{table.correlation} zeigt die Korrelationen der Features, indem der Korrelationskoeffizient berechnet wird. Je höher der Betrag des Koeffizienten, umso stärker ist die Korrelation. Ein Wert von unter 0,5 signalisiert eine schwache Korrelation, ab 0,8 wird von einer starken Korrelation der Variablen gesprochen \cite[S.~268-273]{burkschat2012beschreibende}.
 
-Die Tabelle \ref{correlation} zeigt bereits, dass die Variablen untereinander nicht alle unabhängig sind. Dennoch sind die Korrelationskoeffizienten nicht besonders hoch und signalisieren damit einen schwachen Zusammenhang zwischen den Variablen. Da die durchschnittliche Satzlänge Teil der Formel für den Flesch-Grad ist, ist die Abhängigkeit hier besonders offensichtlich. Diese Abhängigkeit hat den höchsten Koeffizient mit -0,4, die Artikel werden hier jedoch trotzdem weit verteilt liegen. Dies wird durch Abbildung \ref{img.sent_length_readability} sehr gut verdeutlicht. Hier ist jeder der ingesamt 865797 analysierten Artikel in das Diagramm eingezeichnet, jeder Artikel hat dabei einen Alphawert von 0,005, welcher die Durchsichtigkeit eines Punktes angibt. Durch die tiefblauen Punkte wird ebenfalls erkenntlich, dass sich doppelte Artikel im Datensatz befinden müssen.
+Die Tabelle \ref{table.correlation} zeigt bereits, dass die Variablen untereinander nicht alle unabhängig sind. Dennoch sind die Korrelationskoeffizienten nicht besonders hoch und signalisieren damit einen schwachen Zusammenhang zwischen den Variablen. Da die durchschnittliche Satzlänge Teil der Formel für den Flesch-Grad ist, ist die Abhängigkeit hier besonders offensichtlich. Diese Abhängigkeit hat den höchsten Koeffizient mit -0,4, die Artikel werden hier jedoch trotzdem weit verteilt liegen. Dies wird durch Abbildung \ref{img.sent_length_readability} sehr gut verdeutlicht. Hier ist jeder der ingesamt 865797 analysierten Artikel in das Diagramm eingezeichnet, jeder Artikel hat dabei einen Alphawert von 0,005, welcher die Durchsichtigkeit eines Punktes angibt. Durch die tiefblauen Punkte wird ebenfalls erkenntlich, dass sich doppelte Artikel im Datensatz befinden müssen.
 
 \bild{sent_length_readability}{\textwidth}{Korrelation der durchschnittlichen Satzlänge und dem Flesch-Grad}{Korrelation der durchschnittlichen Satzlänge und dem Flesch-Grad}
 
@@ -312,7 +320,7 @@ Weiterhin werden vor der Klassifizierung Artikel herausgefiltert, welche fehlerh
 \subsection{Feature Selection}\label{feature_selection}
 Zunächst werden nur Features für die Klassifizierung verwendet, welche nach der Standardisierung eine Varianz von Eins besitzen. Ein abweichender Wert für die Varianz kann nur vorkommen, wenn alle Artikel für das Feature den gleichen Wert haben.
 
-Um den Einfluss der verschiedenen Gruppen an Features auf die Genauigkeit der Klassifizierung zu untersuchen, werden sieben Featuresets getestet. Diese werden in Tabelle \ref{table:featuresets} vorgestellt und sind für die bessere Referenzierung mit einem Label versehen.
+Um den Einfluss der verschiedenen Gruppen an Features auf die Genauigkeit der Klassifizierung zu untersuchen, werden sieben Featuresets getestet. Diese werden in Tabelle \ref{table.featuresets} vorgestellt und sind für die bessere Referenzierung mit einem Label versehen.
 
 \begin{table}[h]
 \centering
@@ -329,7 +337,7 @@ Label & Features & Anzahl an Features\footnote{Die Anzahl der Features wird \emp
 \emph{alle} & Alle Features & 198\\
 \end{tabular}
 \caption{In dieser Arbeit verwendete Featuresets}
-\label{table:featuresets}
+\label{table.featuresets}
 \end{spacing}
 \end{table}
 
@@ -345,7 +353,7 @@ Des Weiteren liefert die Genauigkeit der Klassifizierung Erkenntnisse darüber, 
 In dieser Arbeit wird multinomiale logistische Regression, auch Maximum-Entropie-Klassifikator genannt, als Verfahren für die Klassifizierung verwendet. Der größte Vorteil hierbei ist die gute Interpretationsmöglichkeit der Gewichtungen. Je höher der Betrag einer Gewichtung ist, umso entscheidender ist die Rolle, die sie bei der Berechnung des Scores einer Klasse spielt. Als linearer Klassifikator ist er zudem auch für den hohen Stichprobenumfang von etwa 100000 Artikeln immer noch gut geeignet. Ein weiteres Verfahren, welches für die Beurteilung der Genauigkeit einer Klassifizierung in dieser Arbeit eingesetzt und untersucht wird, ist die Support Vector Machine mit einem linearen Kernel.
 
 \subsection{Messung der Performance}
-Für die Evaluierung der Ergebnisse einer Klassifizierung gibt es diverse Metriken. Besonders bei einer Klassifizierung mit mehr als zwei Klassen ist es wichtig, die Performance pro Klasse beurteilen zu können. Dafür ist es notwendig, dass mehr als nur die Anzahl an korrekt klassifizierten Beobachtungen, sondern auch auch die \textit{false positives} mit in die Metrik einfließen. Einen guten Überblick gibt hier die Wahrheitsmatrix, welche, wie in Tabelle \ref{confusion_matrix} zu sehen, zeilenweise die vorhergesagten Klassen und spaltenweise die wirkliche Klasse zeigt. Für den Spiegel ergibt sich hier eine gute Trefferquote (recall) von 0,9, die Genauigkeit (precision) ist mit rund 0,64 jedoch vergleichsweise schlecht. Das F\textsubscript{1}-Maß, auch F-Maß genannt, kombiniert diese beiden Metriken, um dieses Verhältnis mit nur einem Maß aussagekräftig beurteilen und damit zwei Klassen oder Klassifikatoren gut vergleichen zu können \cite[S.~88-89]{geron2017hands}:
+Für die Evaluierung der Ergebnisse einer Klassifizierung gibt es diverse Metriken. Besonders bei einer Klassifizierung mit mehr als zwei Klassen ist es wichtig, die Performance pro Klasse beurteilen zu können. Dafür ist es notwendig, dass mehr als nur die Anzahl an korrekt klassifizierten Beobachtungen, sondern auch auch die \textit{false positives} mit in die Metrik einfließen. Einen guten Überblick gibt hier die Wahrheitsmatrix, welche, wie in Tabelle \ref{table.confusion_matrix} zu sehen, zeilenweise die vorhergesagten Klassen und spaltenweise die wirkliche Klasse zeigt. Für den Spiegel ergibt sich hier eine gute Trefferquote (recall) von 0,9, die Genauigkeit (precision) ist mit rund 0,64 jedoch vergleichsweise schlecht. Das F\textsubscript{1}-Maß, auch F-Maß genannt, kombiniert diese beiden Metriken, um dieses Verhältnis mit nur einem Maß aussagekräftig beurteilen und damit zwei Klassen oder Klassifikatoren gut vergleichen zu können \cite[S.~88-89]{geron2017hands}:
 \[ F_1 = \frac{2 \cdot (precision \cdot recall)}{precision + recall} \]
 In diesem Beispiel hat der Spiegel folglich ein F-Maß von rund 0,75. Für die Beurteilung der Zuverlässigkeit des gesamten Klassifikators bei mehr als zwei Klassen, gibt es verschiedene Ansätze um das F-Maß dennoch einsetzen zu können. Es können einerseits alle einzelnen Klassifizierungen für die Berechnung des F-Maßes verwendet werden (\textit{micro}), sodass eine ungleiche Verteilung der Klassen das Ergebnis nicht verzerrt. Es ist jedoch auch möglich, den Durchschnitt der F-Maße der einzelnen Klassen zu berechnen (\textit{macro}).
 
@@ -363,7 +371,7 @@ In diesem Beispiel hat der Spiegel folglich ein F-Maß von rund 0,75. Für die B
 \bottomrule
 \end{tabular}
 \caption{Beispiel einer Wahrheitsmatrix}
-\label{confusion_matrix}
+\label{table.confusion_matrix}
 \end{spacing}
 \end{table}
 
@@ -391,11 +399,11 @@ Ohne Undersampling & 0,5245 & 0,4766\\
 \bottomrule
 \end{tabular}
 \caption{Vergleich der Performance mit und ohne Undersampling der Daten}
-\label{undersampling}
+\label{table.undersampling}
 \end{spacing}
 \end{table}
 
-Die Tabelle \ref{undersampling} zeigt, dass sich die Performance des Klassifikators leicht verbessert, wenn alle Daten verwendet und kein Undersampling mehr angewandt wird. Dies jedoch nur unter der Annahme, dass die Verteilung der Testdaten ebenfalls der Verteilung der Trainingsdaten entspricht. Wenn im Testset für jede Zeitung die gleiche Anzahl an Artikeln verwendet wird, so verschlechtert sich die Zuverlässigkeit der Klassifizierung dramatisch (siehe \textit{macro} F-Maß). Das liegt daran, dass Artikel von Zeitungen mit geringerer Repräsentation bzw. geringerem Support wesentlich schlechter und seltener erkannt werden und damit vor allem die Trefferquote für Zeitungen mit geringem Support sehr schlecht ausfällt. Dies wird bei Betrachtung der individuellen F-Maße der Zeitungen eines Durchlaufes in Tabelle \ref{no_undersampling_individual} sehr deutlich. Folglich hat Undersampling einen positiven Einfluss auf die Zuverlässigkeit der Klassifizierung und ermöglicht eine unverzerrte Evaluierung der Performance.
+Die Tabelle \ref{table.undersampling} zeigt, dass sich die Performance des Klassifikators leicht verbessert, wenn alle Daten verwendet und kein Undersampling mehr angewandt wird. Dies jedoch nur unter der Annahme, dass die Verteilung der Testdaten ebenfalls der Verteilung der Trainingsdaten entspricht. Wenn im Testset für jede Zeitung die gleiche Anzahl an Artikeln verwendet wird, so verschlechtert sich die Zuverlässigkeit der Klassifizierung dramatisch (siehe \textit{macro} F-Maß). Das liegt daran, dass Artikel von Zeitungen mit geringerer Repräsentation bzw. geringerem Support wesentlich schlechter und seltener erkannt werden und damit vor allem die Trefferquote für Zeitungen mit geringem Support sehr schlecht ausfällt. Dies wird bei Betrachtung der individuellen F-Maße der Zeitungen eines Durchlaufes in Tabelle \ref{table.no_undersampling_individual} sehr deutlich. Folglich hat Undersampling einen positiven Einfluss auf die Zuverlässigkeit der Klassifizierung und ermöglicht eine unverzerrte Evaluierung der Performance.
 
 \begin{table}
 \centering
@@ -415,12 +423,12 @@ Zeit Online & 0.53 & 0.65 & 0.58 & 7404\\
 \bottomrule
 \end{tabular}
 \caption{Performance der Klassifizierung der Zeitungen ohne Undersampling}
-\label{no_undersampling_individual}
+\label{table.no_undersampling_individual}
 \end{spacing}
 \end{table}
 
 \subsection{Unterschiede pro Zeitung}
-Weiterhin stellt sich heraus, dass die Genauigkeit und Trefferquote während der Klassifizierung je nach Zeitung sehr unterschiedlich ausfallen kann. Tabelle \ref{undersampling_individual} zeigt für einen Durchlauf, dass die \emph{Ärzte-Zeitung} weit besser von den restlichen Zeitungen unterschieden werden kann. Dies kann dadurch begründet werden, dass diese auch in ihren Politik-Artikeln überwiegend medizinische Themen behandelt und daher einen komplexeren Schreibstil verwendet. Innerhalb der restlichen Zeitungen gibt es ebenfalls Unterschiede in der Zuverlässigkeit der Klassifizierung. Das \emph{Handelsblatt} und die \emph{Zeit Online} werden ein wenig besser und der \emph{Westfälische Anzeiger} etwas schlechter als der Durchschnitt klassifiziert. Insgesamt ist die Klassifizierung der Zeitungen mit dem in dieser Arbeit verwendeten Featureset jedoch sehr unzuverlässig. Dies kann einerseits dadurch begründet werden, dass die Artikel der Zeitungen von vielen verschiedenen Autoren geschrieben werden und sich daraus kein kohärenter Schreibstil identifizieren lässt. Andererseits ist es möglich, dass der Schreibstil einer Zeitung durch die verwendeten Features nicht akkurat genug repräsentiert wird. Aus diesem Grund wird der Einfluss der einzelnen Features im Folgenden genauer untersucht.
+Weiterhin stellt sich heraus, dass die Genauigkeit und Trefferquote während der Klassifizierung je nach Zeitung sehr unterschiedlich ausfallen kann. Tabelle \ref{table.undersampling_individual} zeigt für einen Durchlauf, dass die \emph{Ärzte-Zeitung} weit besser von den restlichen Zeitungen unterschieden werden kann. Dies kann dadurch begründet werden, dass diese auch in ihren Politik-Artikeln überwiegend medizinische Themen behandelt und daher einen komplexeren Schreibstil verwendet. Innerhalb der restlichen Zeitungen gibt es ebenfalls Unterschiede in der Zuverlässigkeit der Klassifizierung. Das \emph{Handelsblatt} und die \emph{Zeit Online} werden ein wenig besser und der \emph{Westfälische Anzeiger} etwas schlechter als der Durchschnitt klassifiziert. Insgesamt ist die Klassifizierung der Zeitungen mit dem in dieser Arbeit verwendeten Featureset jedoch sehr unzuverlässig. Dies kann einerseits dadurch begründet werden, dass die Artikel der Zeitungen von vielen verschiedenen Autoren geschrieben werden und sich daraus kein kohärenter Schreibstil identifizieren lässt. Andererseits ist es möglich, dass der Schreibstil einer Zeitung durch die verwendeten Features nicht akkurat genug repräsentiert wird. Aus diesem Grund wird der Einfluss der einzelnen Features im Folgenden genauer untersucht.
 
 \begin{table}[h]
 \centering
@@ -440,7 +448,7 @@ Zeit Online & 0.50 & 0.59 & 0.54\\
 \bottomrule
 \end{tabular}
 \caption{Performance der Klassifizierung der Zeitungen mit Undersampling}
-\label{undersampling_individual}
+\label{table.undersampling_individual}
 \end{spacing}
 \end{table}
 
